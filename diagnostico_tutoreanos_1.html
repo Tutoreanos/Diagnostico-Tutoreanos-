@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico Empresarial — Tutoreanos</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --laranja: #df5f2e;
+    --laranja-escuro: #b84a20;
+    --laranja-claro: #f07040;
+    --preto: #141414;
+    --branco: #ffffff;
+    --cinza-claro: #f5f5f5;
+    --cinza: #e0e0e0;
+    --cinza-medio: #999;
+    --cinza-texto: #444;
+    --sombra: 0 4px 24px rgba(0,0,0,0.10);
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: #f2f0ec;
+    color: var(--preto);
+    min-height: 100vh;
+  }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: var(--preto);
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  }
+  .logo-area { display: flex; align-items: center; gap: 14px; }
+  .logo-circle {
+    width: 46px; height: 46px;
+    background: var(--laranja);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-circle span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    color: white;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  .logo-text { display: flex; flex-direction: column; }
+  .logo-text .brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+  .logo-text .sub {
+    font-size: 11px;
+    color: var(--laranja);
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .header-badge {
+    background: var(--laranja);
+    color: white;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border-radius: 4px;
+  }
+
+  /* ---- LAYOUT ---- */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+
+  /* ---- TELA INICIAL ---- */
+  #tela-inicio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 82px);
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: var(--laranja);
+    color: white;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 3px;
+    margin-bottom: 24px;
+  }
+  #tela-inicio h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 800;
+    color: var(--preto);
+    line-height: 1.05;
+    margin-bottom: 20px;
+    max-width: 700px;
+  }
+  #tela-inicio h1 em {
+    font-style: normal;
+    color: var(--laranja);
+  }
+  #tela-inicio p {
+    font-size: 17px;
+    color: var(--cinza-texto);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+  .areas-preview {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .area-chip {
+    background: white;
+    border: 2px solid var(--cinza);
+    border-radius: 30px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--preto);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .area-chip .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--laranja);
+  }
+
+  /* ---- FORMULÁRIO CLIENTE ---- */
+  #tela-cliente {
+    display: none;
+    padding: 48px 0;
+  }
+  .form-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    padding: 40px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .form-card h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--preto);
+    margin-bottom: 6px;
+  }
+  .form-card p { color: var(--cinza-medio); font-size: 14px; margin-bottom: 28px; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--cinza-texto);
+    margin-bottom: 8px;
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 2px solid var(--cinza);
+    border-radius: 8px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    color: var(--preto);
+    background: var(--cinza-claro);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--laranja); background: white; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* ---- DIAGNÓSTICO ---- */
+  #tela-diagnostico { display: none; padding: 40px 0; }
+  .diag-header {
+    background: var(--preto);
+    border-radius: var(--radius);
+    padding: 24px 32px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .diag-header .cliente-info h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+  }
+  .diag-header .cliente-info span {
+    font-size: 13px;
+    color: var(--cinza-medio);
+  }
+  .progress-wrap { flex: 1; min-width: 200px; max-width: 320px; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--cinza-medio);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #333;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--laranja);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+
+  .area-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .area-tab {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid var(--cinza);
+    background: white;
+    color: var(--cinza-medio);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .area-tab.active {
+    border-color: var(--laranja);
+    background: var(--laranja);
+    color: white;
+  }
+  .area-tab.completed {
+    border-color: #2d9e5f;
+    color: #2d9e5f;
+  }
+  .area-tab.completed .check { display: inline; }
+  .area-tab .check { display: none; }
+
+  .perguntas-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    padding: 36px;
+    margin-bottom: 24px;
+  }
+  .area-titulo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--preto);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .area-titulo .icone {
+    width: 36px; height: 36px;
+    background: var(--laranja);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .area-desc { font-size: 13px; color: var(--cinza-medio); margin-bottom: 28px; }
+
+  .pergunta-item { margin-bottom: 28px; }
+  .pergunta-item:last-child { margin-bottom: 0; }
+  .pergunta-texto {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--preto);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .pergunta-numero {
+    display: inline-block;
+    background: var(--laranja);
+    color: white;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+  }
+  .escala-wrap { display: flex; gap: 8px; flex-wrap: wrap; }
+  .escala-btn {
+    width: 44px; height: 44px;
+    border: 2px solid var(--cinza);
+    border-radius: 8px;
+    background: white;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--cinza-medio);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .escala-btn:hover { border-color: var(--laranja); color: var(--laranja); }
+  .escala-btn.selected {
+    background: var(--laranja);
+    border-color: var(--laranja);
+    color: white;
+  }
+  .escala-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--cinza-medio);
+    font-style: italic;
+  }
+
+  .obs-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--cinza);
+    border-radius: 8px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: var(--preto);
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    margin-top: 12px;
+    transition: border-color 0.2s;
+  }
+  .obs-input:focus { border-color: var(--laranja); }
+  .obs-label { font-size: 12px; color: var(--cinza-medio); margin-top: 12px; display: block; }
+
+  /* ---- RESULTADO ---- */
+  #tela-resultado { display: none; padding: 40px 0; }
+
+  .resultado-hero {
+    background: var(--preto);
+    border-radius: var(--radius);
+    padding: 40px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .resultado-hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: var(--laranja);
+    border-radius: 50%;
+    opacity: 0.12;
+  }
+  .resultado-hero .top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .resultado-hero h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--laranja);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .resultado-hero h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+  }
+  .score-big {
+    text-align: center;
+  }
+  .score-big .num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 80px;
+    font-weight: 800;
+    color: var(--laranja);
+    line-height: 1;
+  }
+  .score-big .den {
+    font-size: 22px;
+    color: var(--cinza-medio);
+    font-weight: 300;
+  }
+  .score-big .label {
+    font-size: 12px;
+    color: var(--cinza-medio);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+  .maturidade-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-top: 8px;
+  }
+  .nivel-critico { background: #ff4444; color: white; }
+  .nivel-alerta  { background: #ff9800; color: white; }
+  .nivel-moderado{ background: #2196F3; color: white; }
+  .nivel-bom     { background: #4CAF50; color: white; }
+  .nivel-excelente{ background: #8BC34A; color: white; }
+
+  .cards-scores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .score-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    padding: 22px 20px;
+    border-left: 4px solid var(--laranja);
+    transition: transform 0.2s;
+  }
+  .score-card:hover { transform: translateY(-2px); }
+  .score-card .area-nome {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--cinza-medio);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .score-card .area-pontos {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .score-card .barra {
+    height: 5px;
+    background: var(--cinza);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .score-card .barra-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease;
+  }
+  .score-card .nivel-texto {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  .graficos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 700px) { .graficos-grid { grid-template-columns: 1fr; } }
+  .grafico-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    padding: 24px;
+  }
+  .grafico-card h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--preto);
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--cinza);
+  }
+  .chart-container { position: relative; }
+
+  .recomendacoes-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .recomendacoes-card h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--preto);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .recomendacoes-card h4 span {
+    background: var(--laranja);
+    color: white;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .rec-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--cinza);
+  }
+  .rec-item:last-child { border-bottom: none; }
+  .rec-prioridade {
+    flex-shrink: 0;
+    width: 60px;
+    text-align: center;
+  }
+  .rec-prioridade .prio-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .prio-alta { background: #ffebee; color: #c62828; }
+  .prio-media { background: #fff3e0; color: #e65100; }
+  .prio-baixa { background: #e8f5e9; color: #2e7d32; }
+  .rec-conteudo h5 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--preto);
+    margin-bottom: 4px;
+  }
+  .rec-conteudo p { font-size: 13px; color: var(--cinza-medio); line-height: 1.5; }
+
+  .cta-card {
+    background: linear-gradient(135deg, var(--laranja), var(--laranja-escuro));
+    border-radius: var(--radius);
+    padding: 36px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .cta-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 6px;
+  }
+  .cta-card p { color: rgba(255,255,255,0.8); font-size: 14px; max-width: 400px; }
+
+  /* ---- BOTÕES ---- */
+  .btn {
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-laranja {
+    background: var(--laranja);
+    color: white;
+  }
+  .btn-laranja:hover { background: var(--laranja-escuro); transform: translateY(-1px); }
+  .btn-preto {
+    background: var(--preto);
+    color: white;
+  }
+  .btn-preto:hover { background: #333; }
+  .btn-branco {
+    background: white;
+    color: var(--preto);
+  }
+  .btn-branco:hover { background: var(--cinza-claro); }
+  .btn-outline {
+    background: transparent;
+    color: var(--laranja);
+    border: 2px solid var(--laranja);
+  }
+  .btn-outline:hover { background: var(--laranja); color: white; }
+
+  .btn-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* ---- SEPARADOR ---- */
+  .sep { height: 1px; background: var(--cinza); margin: 24px 0; }
+
+  /* ---- ANIMAÇÕES ---- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.4s ease both; }
+
+  @media (max-width: 600px) {
+    .header { padding: 14px 16px; }
+    .form-row { grid-template-columns: 1fr; }
+    .graficos-grid { grid-template-columns: 1fr; }
+    .form-card, .perguntas-card { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo-area">
+    <div class="logo-circle"><span>t.</span></div>
+    <div class="logo-text">
+      <span class="brand">tutoreanos</span>
+      <span class="sub">Consultores de Negócios</span>
+    </div>
+  </div>
+  <div class="header-badge">Diagnóstico Empresarial</div>
+</header>
+
+<!-- TELA INÍCIO -->
+<div id="tela-inicio">
+  <div class="hero-tag">Ferramenta de Pré-Venda</div>
+  <h1>Diagnóstico <em>360°</em><br>do seu Negócio</h1>
+  <p>Avalie em poucos minutos o nível de maturidade da sua empresa em 4 dimensões essenciais e descubra onde estão as maiores oportunidades de crescimento.</p>
+  <div class="areas-preview">
+    <div class="area-chip"><span class="dot"></span>Financeiro</div>
+    <div class="area-chip"><span class="dot"></span>Vendas & Marketing</div>
+    <div class="area-chip"><span class="dot"></span>Operações & Processos</div>
+    <div class="area-chip"><span class="dot"></span>Pessoas & Gestão</div>
+  </div>
+  <button class="btn btn-laranja" onclick="irParaCliente()">
+    ▶ &nbsp; Iniciar Diagnóstico
+  </button>
+</div>
+
+<!-- TELA DADOS CLIENTE -->
+<div id="tela-cliente">
+  <div class="container">
+    <div class="form-card fade-up">
+      <h2>Dados da Empresa</h2>
+      <p>Preencha os dados do cliente para iniciar o diagnóstico</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome do Responsável *</label>
+          <input type="text" id="nome-cliente" placeholder="Ex: João Silva">
+        </div>
+        <div class="form-group">
+          <label>Nome da Empresa *</label>
+          <input type="text" id="nome-empresa" placeholder="Ex: Silva & Filhos Ltda">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Segmento</label>
+          <select id="segmento">
+            <option value="">Selecione...</option>
+            <option>Comércio Varejista</option>
+            <option>Comércio Atacadista</option>
+            <option>Serviços</option>
+            <option>Indústria / Manufatura</option>
+            <option>Alimentação / Gastronomia</option>
+            <option>Saúde e Bem-estar</option>
+            <option>Tecnologia</option>
+            <option>Educação</option>
+            <option>Construção / Imóveis</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Nº de Funcionários</label>
+          <select id="funcionarios">
+            <option value="">Selecione...</option>
+            <option>1 (MEI)</option>
+            <option>2 a 5</option>
+            <option>6 a 19</option>
+            <option>20 a 49</option>
+            <option>50 ou mais</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Faturamento Mensal (aprox.)</label>
+          <select id="faturamento">
+            <option value="">Selecione...</option>
+            <option>Até R$ 10 mil</option>
+            <option>R$ 10 mil – R$ 50 mil</option>
+            <option>R$ 50 mil – R$ 150 mil</option>
+            <option>R$ 150 mil – R$ 500 mil</option>
+            <option>Acima de R$ 500 mil</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tempo de Mercado</label>
+          <select id="tempo-mercado">
+            <option value="">Selecione...</option>
+            <option>Menos de 1 ano</option>
+            <option>1 a 3 anos</option>
+            <option>3 a 7 anos</option>
+            <option>Mais de 7 anos</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Consultor Responsável</label>
+        <input type="text" id="nome-consultor" placeholder="Seu nome">
+      </div>
+      <div class="sep"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <button class="btn btn-outline" onclick="irParaInicio()">← Voltar</button>
+        <button class="btn btn-laranja" onclick="iniciarDiagnostico()">Iniciar Diagnóstico →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TELA DIAGNÓSTICO -->
+<div id="tela-diagnostico">
+  <div class="container">
+    <div class="diag-header">
+      <div class="cliente-info">
+        <h3 id="diag-nome-empresa">Empresa</h3>
+        <span id="diag-info-extra">Diagnóstico em andamento</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="prog-texto">Área 1 de 4</span>
+          <span id="prog-pct">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="area-tabs" id="area-tabs"></div>
+
+    <div class="perguntas-card fade-up" id="perguntas-card">
+      <div class="area-titulo" id="area-titulo"></div>
+      <p class="area-desc" id="area-desc"></p>
+      <div id="perguntas-lista"></div>
+      <div class="btn-nav">
+        <button class="btn btn-outline" id="btn-anterior" onclick="areaAnterior()">← Anterior</button>
+        <button class="btn btn-laranja" id="btn-proximo" onclick="areaProxima()">Próxima Área →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TELA RESULTADO -->
+<div id="tela-resultado">
+  <div class="container">
+    <div class="resultado-hero fade-up">
+      <div class="top">
+        <div>
+          <h2>Diagnóstico Concluído</h2>
+          <h3 id="res-empresa-nome">Empresa</h3>
+          <div id="maturidade-badge" class="maturidade-badge" style="margin-top:10px;"></div>
+        </div>
+        <div class="score-big">
+          <div><span class="num" id="score-total">0</span><span class="den">/100</span></div>
+          <div class="label">Score Geral</div>
+        </div>
+      </div>
+      <div id="cards-scores" class="cards-scores"></div>
+    </div>
+
+    <div class="graficos-grid">
+      <div class="grafico-card">
+        <h4>🕸️ Radar de Maturidade</h4>
+        <div class="chart-container" style="height:280px;">
+          <canvas id="grafico-radar"></canvas>
+        </div>
+      </div>
+      <div class="grafico-card">
+        <h4>📊 Score por Área</h4>
+        <div class="chart-container" style="height:280px;">
+          <canvas id="grafico-barras"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="grafico-card" style="margin-bottom:28px;">
+      <h4>📈 Distribuição das Respostas</h4>
+      <div class="chart-container" style="height:220px;">
+        <canvas id="grafico-linha"></canvas>
+      </div>
+    </div>
+
+    <div class="recomendacoes-card" id="recomendacoes-card">
+      <h4><span>💡</span> Recomendações Prioritárias</h4>
+      <div id="lista-recomendacoes"></div>
+    </div>
+
+    <div class="cta-card">
+      <div>
+        <h3>Pronto para transformar seu negócio?</h3>
+        <p>Este diagnóstico revelou pontos críticos que, com a consultoria certa, podem se tornar seus maiores diferenciais competitivos.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+        <button class="btn btn-branco" onclick="novodiagnostico()">+ Novo Diagnóstico</button>
+        <button class="btn btn-preto" onclick="window.print()">🖨 Imprimir Relatório</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DADOS =====
+const AREAS = [
+  {
+    id: 'financeiro',
+    nome: 'Financeiro',
+    icone: '💰',
+    desc: 'Avalia o controle financeiro, fluxo de caixa, precificação e saúde financeira da empresa.',
+    perguntas: [
+      { texto: 'A empresa possui controle de fluxo de caixa atualizado (entradas e saídas)?', obs: true },
+      { texto: 'Os custos fixos e variáveis são conhecidos e monitorados mensalmente?', obs: false },
+      { texto: 'A precificação dos produtos/serviços é feita com base em dados (custo + margem)?', obs: true },
+      { texto: 'A empresa separa as finanças pessoais das finanças do negócio?', obs: false },
+      { texto: 'Existe reserva de capital ou limite de crédito disponível para emergências?', obs: true },
+    ]
+  },
+  {
+    id: 'vendas',
+    nome: 'Vendas & Marketing',
+    icone: '📢',
+    desc: 'Avalia a estratégia comercial, presença digital, processos de venda e captação de clientes.',
+    perguntas: [
+      { texto: 'A empresa possui um processo de vendas definido (funil, abordagem, follow-up)?', obs: true },
+      { texto: 'Existe uma presença digital ativa e consistente (redes sociais, Google Meu Negócio, site)?', obs: false },
+      { texto: 'A empresa conhece seu perfil de cliente ideal (ICP) e sabe onde encontrá-lo?', obs: true },
+      { texto: 'As metas de vendas são definidas, monitoradas e comunicadas para a equipe?', obs: false },
+      { texto: 'Existe estratégia de fidelização ou recompra para os clientes atuais?', obs: true },
+    ]
+  },
+  {
+    id: 'operacoes',
+    nome: 'Operações & Processos',
+    icone: '⚙️',
+    desc: 'Avalia a eficiência operacional, padronização de processos, qualidade e uso de ferramentas.',
+    perguntas: [
+      { texto: 'Os processos operacionais principais estão documentados ou padronizados (POPs)?', obs: true },
+      { texto: 'A empresa utiliza ferramentas ou sistemas para gestão (ERP, planilhas estruturadas, CRM)?', obs: false },
+      { texto: 'Existe controle de estoque ou indicadores de produtividade operacional?', obs: true },
+      { texto: 'Os erros e retrabalhos são rastreados e há esforço para reduzi-los?', obs: false },
+      { texto: 'A entrega do produto/serviço ao cliente tem qualidade consistente e prazo cumprido?', obs: true },
+    ]
+  },
+  {
+    id: 'pessoas',
+    nome: 'Pessoas & Gestão',
+    icone: '👥',
+    desc: 'Avalia liderança, cultura organizacional, desenvolvimento de equipe e gestão de talentos.',
+    perguntas: [
+      { texto: 'Os colaboradores têm funções, metas e responsabilidades claramente definidas?', obs: true },
+      { texto: 'A empresa realiza reuniões de alinhamento ou feedback com a equipe regularmente?', obs: false },
+      { texto: 'Existe algum programa de capacitação, treinamento ou desenvolvimento para a equipe?', obs: true },
+      { texto: 'O clima organizacional é positivo e a empresa tem baixo índice de rotatividade?', obs: false },
+      { texto: 'O empresário consegue se ausentar por alguns dias sem comprometer a operação?', obs: true },
+    ]
+  }
+];
+
+const NIVEL_COR = [
+  { min: 0,  max: 39, label: 'Nível Crítico',   cls: 'nivel-critico',  cor: '#ff4444' },
+  { min: 40, max: 54, label: 'Em Alerta',        cls: 'nivel-alerta',   cor: '#ff9800' },
+  { min: 55, max: 69, label: 'Moderado',         cls: 'nivel-moderado', cor: '#2196F3' },
+  { min: 70, max: 84, label: 'Bom',              cls: 'nivel-bom',      cor: '#4CAF50' },
+  { min: 85, max: 100,label: 'Excelente',        cls: 'nivel-excelente',cor: '#8BC34A' },
+];
+
+function getNivel(score) {
+  return NIVEL_COR.find(n => score >= n.min && score <= n.max) || NIVEL_COR[0];
+}
+
+// Estado
+let estado = {
+  cliente: {},
+  areaAtual: 0,
+  respostas: {},   // {areaId: {pIdx: valor}}
+  obs: {}
+};
+
+// ===== NAVEGAÇÃO =====
+function irParaCliente() {
+  document.getElementById('tela-inicio').style.display = 'none';
+  document.getElementById('tela-cliente').style.display = 'block';
+  window.scrollTo(0,0);
+}
+function irParaInicio() {
+  document.getElementById('tela-cliente').style.display = 'none';
+  document.getElementById('tela-inicio').style.display = 'flex';
+}
+function iniciarDiagnostico() {
+  const nome = document.getElementById('nome-cliente').value.trim();
+  const empresa = document.getElementById('nome-empresa').value.trim();
+  if (!nome || !empresa) { alert('Por favor, preencha ao menos o nome e a empresa.'); return; }
+  estado.cliente = {
+    nome, empresa,
+    segmento: document.getElementById('segmento').value,
+    funcionarios: document.getElementById('funcionarios').value,
+    faturamento: document.getElementById('faturamento').value,
+    tempoMercado: document.getElementById('tempo-mercado').value,
+    consultor: document.getElementById('nome-consultor').value,
+    data: new Date().toLocaleDateString('pt-BR')
+  };
+  estado.areaAtual = 0;
+  estado.respostas = {};
+  estado.obs = {};
+  document.getElementById('tela-cliente').style.display = 'none';
+  document.getElementById('tela-diagnostico').style.display = 'block';
+  document.getElementById('diag-nome-empresa').textContent = empresa;
+  document.getElementById('diag-info-extra').textContent = (estado.cliente.consultor ? 'Consultor: ' + estado.cliente.consultor + ' • ' : '') + estado.cliente.data;
+  renderizarTabs();
+  renderizarArea();
+  window.scrollTo(0,0);
+}
+
+function renderizarTabs() {
+  const container = document.getElementById('area-tabs');
+  container.innerHTML = AREAS.map((a, i) => {
+    const completada = temRespostasCompletas(i);
+    const ativa = i === estado.areaAtual;
+    let cls = 'area-tab';
+    if (ativa) cls += ' active';
+    else if (completada) cls += ' completed';
+    return `<div class="${cls}" onclick="irParaArea(${i})">
+      ${a.icone} ${a.nome}
+      <span class="check">✓</span>
+    </div>`;
+  }).join('');
+}
+
+function temRespostasCompletas(idx) {
+  const area = AREAS[idx];
+  const resp = estado.respostas[area.id] || {};
+  return area.perguntas.every((_, i) => resp[i] !== undefined);
+}
+
+function irParaArea(idx) {
+  estado.areaAtual = idx;
+  renderizarTabs();
+  renderizarArea();
+}
+
+function renderizarArea() {
+  const area = AREAS[estado.areaAtual];
+  const pct = Math.round(((estado.areaAtual) / AREAS.length) * 100);
+  document.getElementById('prog-texto').textContent = `Área ${estado.areaAtual+1} de ${AREAS.length}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  document.getElementById('area-titulo').innerHTML = `<div class="icone">${area.icone}</div>${area.nome}`;
+  document.getElementById('area-desc').textContent = area.desc;
+
+  const resp = estado.respostas[area.id] || {};
+  const obsMap = estado.obs[area.id] || {};
+
+  const lista = document.getElementById('perguntas-lista');
+  lista.innerHTML = area.perguntas.map((p, i) => {
+    const val = resp[i];
+    const obsVal = obsMap[i] || '';
+    const btns = [1,2,3,4,5].map(n => `
+      <button class="escala-btn ${val===n?'selected':''}" onclick="responder('${area.id}',${i},${n})">${n}</button>
+    `).join('');
+    return `
+      <div class="pergunta-item" id="perg-${area.id}-${i}">
+        <div class="pergunta-texto"><span class="pergunta-numero">${i+1}</span>${p.texto}</div>
+        <div class="escala-wrap">${btns}</div>
+        <div class="escala-labels"><span>Inexistente</span><span>Em desenvolvimento</span><span>Totalmente implantado</span></div>
+        ${p.obs ? `<span class="obs-label">Observações do consultor (opcional)</span>
+        <textarea class="obs-input" id="obs-${area.id}-${i}" placeholder="Anote pontos relevantes..."
+          onchange="salvarObs('${area.id}',${i},this.value)">${obsVal}</textarea>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  // Botão anterior
+  const btnAnt = document.getElementById('btn-anterior');
+  btnAnt.style.visibility = estado.areaAtual === 0 ? 'hidden' : 'visible';
+
+  // Botão próximo
+  const btnProx = document.getElementById('btn-proximo');
+  if (estado.areaAtual === AREAS.length - 1) {
+    btnProx.textContent = '🏁 Ver Resultado';
+    btnProx.onclick = verResultado;
+  } else {
+    btnProx.innerHTML = 'Próxima Área →';
+    btnProx.onclick = areaProxima;
+  }
+}
+
+function responder(areaId, pIdx, valor) {
+  if (!estado.respostas[areaId]) estado.respostas[areaId] = {};
+  estado.respostas[areaId][pIdx] = valor;
+  // Atualiza botões visualmente
+  const area = AREAS.find(a => a.id === areaId);
+  const pergDiv = document.getElementById(`perg-${areaId}-${pIdx}`);
+  pergDiv.querySelectorAll('.escala-btn').forEach((btn, i) => {
+    btn.classList.toggle('selected', i+1 === valor);
+  });
+  renderizarTabs();
+}
+
+function salvarObs(areaId, pIdx, valor) {
+  if (!estado.obs[areaId]) estado.obs[areaId] = {};
+  estado.obs[areaId][pIdx] = valor;
+}
+
+function areaProxima() {
+  if (estado.areaAtual < AREAS.length - 1) {
+    estado.areaAtual++;
+    renderizarTabs();
+    renderizarArea();
+    window.scrollTo(0,0);
+  }
+}
+function areaAnterior() {
+  if (estado.areaAtual > 0) {
+    estado.areaAtual--;
+    renderizarTabs();
+    renderizarArea();
+    window.scrollTo(0,0);
+  }
+}
+
+// ===== RESULTADO =====
+function calcularScores() {
+  return AREAS.map(area => {
+    const resp = estado.respostas[area.id] || {};
+    const total = area.perguntas.length;
+    const soma = Object.values(resp).reduce((a, b) => a + b, 0);
+    const maxPossivel = total * 5;
+    const score = total > 0 ? Math.round((soma / maxPossivel) * 100) : 0;
+    const respondidas = Object.keys(resp).length;
+    return { area, score, soma, total, respondidas };
+  });
+}
+
+let chartRadar, chartBarras, chartLinha;
+
+function verResultado() {
+  document.getElementById('tela-diagnostico').style.display = 'none';
+  document.getElementById('tela-resultado').style.display = 'block';
+  window.scrollTo(0,0);
+
+  const scores = calcularScores();
+  const media = Math.round(scores.reduce((a, s) => a + s.score, 0) / scores.length);
+  const nivel = getNivel(media);
+
+  document.getElementById('res-empresa-nome').textContent = estado.cliente.empresa;
+  document.getElementById('score-total').textContent = media;
+  const badge = document.getElementById('maturidade-badge');
+  badge.textContent = nivel.label;
+  badge.className = 'maturidade-badge ' + nivel.cls;
+
+  // Cards por área
+  const cardsContainer = document.getElementById('cards-scores');
+  cardsContainer.innerHTML = scores.map(s => {
+    const n = getNivel(s.score);
+    return `<div class="score-card" style="border-left-color:${n.cor}">
+      <div class="area-nome">${s.area.icone} ${s.area.nome}</div>
+      <div class="area-pontos" style="color:${n.cor}">${s.score}<span style="font-size:18px;color:var(--cinza-medio)">/100</span></div>
+      <div class="barra"><div class="barra-fill" style="width:${s.score}%;background:${n.cor}"></div></div>
+      <div class="nivel-texto" style="color:${n.cor}">${n.label}</div>
+    </div>`;
+  }).join('');
+
+  // Gráficos
+  setTimeout(() => {
+    if (chartRadar) chartRadar.destroy();
+    if (chartBarras) chartBarras.destroy();
+    if (chartLinha) chartLinha.destroy();
+
+    const labels = scores.map(s => s.area.nome);
+    const data = scores.map(s => s.score);
+    const cores = scores.map(s => getNivel(s.score).cor);
+
+    // Radar
+    chartRadar = new Chart(document.getElementById('grafico-radar'), {
+      type: 'radar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Score',
+          data,
+          backgroundColor: 'rgba(223,95,46,0.2)',
+          borderColor: '#df5f2e',
+          pointBackgroundColor: '#df5f2e',
+          pointRadius: 5,
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { r: { min: 0, max: 100, ticks: { stepSize: 20, font: { size: 10 } }, pointLabels: { font: { size: 11, weight: '600' } } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // Barras
+    chartBarras = new Chart(document.getElementById('grafico-barras'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Score',
+          data,
+          backgroundColor: cores,
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { y: { min: 0, max: 100, ticks: { stepSize: 20 } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // Linha - distribuição de respostas por nota
+    const distrib = [0,0,0,0,0];
+    AREAS.forEach(area => {
+      const resp = estado.respostas[area.id] || {};
+      Object.values(resp).forEach(v => { if (v >= 1 && v <= 5) distrib[v-1]++; });
+    });
+    chartLinha = new Chart(document.getElementById('grafico-linha'), {
+      type: 'line',
+      data: {
+        labels: ['Nota 1 (Inexistente)', 'Nota 2', 'Nota 3', 'Nota 4', 'Nota 5 (Excelente)'],
+        datasets: [{
+          label: 'Nº de respostas',
+          data: distrib,
+          fill: true,
+          backgroundColor: 'rgba(223,95,46,0.15)',
+          borderColor: '#df5f2e',
+          tension: 0.4,
+          pointBackgroundColor: '#df5f2e',
+          pointRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+      }
+    });
+  }, 200);
+
+  // Recomendações
+  gerarRecomendacoes(scores);
+}
+
+function gerarRecomendacoes(scores) {
+  const REC = {
+    financeiro: [
+      { limite: 40, prio: 'alta', titulo: 'Implante controle de fluxo de caixa urgente', desc: 'A empresa não possui visibilidade financeira básica. Isso impede decisões seguras e pode levar a insolvência.' },
+      { limite: 70, prio: 'media', titulo: 'Estruture a gestão financeira com ferramentas', desc: 'Utilize planilhas ou sistemas simples para acompanhar custos, receitas e margem de contribuição.' },
+      { limite: 100, prio: 'baixa', titulo: 'Avance para indicadores financeiros estratégicos', desc: 'Com a base consolidada, trabalhe com DRE, ROI e metas de rentabilidade.' },
+    ],
+    vendas: [
+      { limite: 40, prio: 'alta', titulo: 'Defina um processo de vendas do zero', desc: 'Sem processo comercial definido, as vendas dependem de sorte. Estruture abordagem, proposta e follow-up.' },
+      { limite: 70, prio: 'media', titulo: 'Fortaleça a presença digital e estratégia de atração', desc: 'Invista em conteúdo, SEO local e gestão ativa das redes sociais para ampliar a captação de clientes.' },
+      { limite: 100, prio: 'baixa', titulo: 'Implante um CRM e métricas de conversão', desc: 'Monitore taxa de conversão, ticket médio e LTV para otimizar continuamente o funil de vendas.' },
+    ],
+    operacoes: [
+      { limite: 40, prio: 'alta', titulo: 'Documente os processos críticos imediatamente', desc: 'Processos não documentados criam dependência de pessoas e impedem o crescimento escalável.' },
+      { limite: 70, prio: 'media', titulo: 'Adote ferramentas de gestão operacional', desc: 'Um sistema simples de controle (ERP, planilha estruturada) pode reduzir erros e aumentar produtividade.' },
+      { limite: 100, prio: 'baixa', titulo: 'Implante indicadores de desempenho (KPIs) operacionais', desc: 'Meça tempo de entrega, retrabalho e satisfação do cliente para identificar gargalos.' },
+    ],
+    pessoas: [
+      { limite: 40, prio: 'alta', titulo: 'Defina funções, metas e responsabilidades claras', desc: 'Equipe sem clareza de papel gera conflitos, retrabalho e falta de comprometimento.' },
+      { limite: 70, prio: 'media', titulo: 'Crie uma rotina de reuniões e feedbacks', desc: 'Alinhamentos semanais e feedbacks estruturados aumentam engajamento e reduzem ruídos.' },
+      { limite: 100, prio: 'baixa', titulo: 'Desenvolva um plano de crescimento de carreira', desc: 'Investir no desenvolvimento da equipe retém talentos e aumenta a produtividade no longo prazo.' },
+    ]
+  };
+
+  const container = document.getElementById('lista-recomendacoes');
+  let itens = [];
+  scores.forEach(s => {
+    const lista = REC[s.area.id];
+    const rec = lista.find(r => s.score <= r.limite) || lista[lista.length - 1];
+    itens.push({ area: s.area, score: s.score, ...rec });
+  });
+  itens.sort((a,b) => {
+    const ord = { alta: 0, media: 1, baixa: 2 };
+    return ord[a.prio] - ord[b.prio];
+  });
+
+  container.innerHTML = itens.map(item => `
+    <div class="rec-item">
+      <div class="rec-prioridade">
+        <div class="prio-badge prio-${item.prio}">${item.prio.toUpperCase()}</div>
+        <div style="font-size:11px;color:var(--cinza-medio);margin-top:6px">${item.area.icone} ${item.area.nome}</div>
+      </div>
+      <div class="rec-conteudo">
+        <h5>${item.titulo}</h5>
+        <p>${item.desc}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+function novodiagnostico() {
+  document.getElementById('tela-resultado').style.display = 'none';
+  document.getElementById('tela-inicio').style.display = 'flex';
+  estado = { cliente: {}, areaAtual: 0, respostas: {}, obs: {} };
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

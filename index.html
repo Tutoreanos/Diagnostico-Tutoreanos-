@@ -871,7 +871,6 @@
         <button class="btn btn-preto" onclick="window.print()">🖨 Imprimir Relatório</button>
       </div>
     </div>
-    <div id="email-status" style="display:none;margin-top:16px;padding:14px 20px;border-radius:10px;font-size:14px;font-weight:500;text-align:center;"></div>
   </div>
 </div>
 
@@ -1330,6 +1329,8 @@ function enviarEmail(scores, media, nivel) {
   }).join('\n');
 
   const params = {
+    name:           estado.cliente.nome || 'Diagnóstico',
+    email:          'eron.tutoreanos@gmail.com',
     empresa:        estado.cliente.empresa || '—',
     responsavel:    estado.cliente.nome || '—',
     segmento:       estado.cliente.segmento || '—',

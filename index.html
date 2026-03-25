@@ -6,6 +6,7 @@
 <title>Diagnóstico Empresarial — Tutoreanos</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root {
     --laranja: #df5f2e;
@@ -688,7 +689,6 @@
 
 <!-- TELA INÍCIO -->
 <div id="tela-inicio">
-  <div class="hero-tag">Ferramenta de Pré-Venda</div>
   <h1>Diagnóstico <em>360°</em><br>do seu Negócio</h1>
   <p>Avalie em poucos minutos o nível de maturidade da sua empresa em 4 dimensões essenciais e descubra onde estão as maiores oportunidades de crescimento.</p>
   <div class="areas-preview">
@@ -869,8 +869,10 @@
       <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
         <button class="btn btn-branco" onclick="novodiagnostico()">+ Novo Diagnóstico</button>
         <button class="btn btn-preto" onclick="window.print()">🖨 Imprimir Relatório</button>
+        <button class="btn btn-laranja" id="btn-email" onclick="enviarEmail()">📧 Enviar por E-mail</button>
       </div>
     </div>
+    <div id="email-status" style="display:none;margin-top:16px;padding:14px 20px;border-radius:10px;font-size:14px;font-weight:500;text-align:center;"></div>
   </div>
 </div>
 
@@ -1276,6 +1278,101 @@ function novodiagnostico() {
   document.getElementById('tela-inicio').style.display = 'flex';
   estado = { cliente: {}, areaAtual: 0, respostas: {}, obs: {} };
   window.scrollTo(0,0);
+}
+
+// ===== EMAIL =====
+emailjs.init('SNd2QtYya6gcs3_VDCfRN');
+
+function enviarEmail() {
+  const btn = document.getElementById('btn-email');
+  const status = document.getElementById('email-status');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Enviando...';
+
+  const scores = calcularScores();
+  const media = Math.round(scores.reduce((a, s) => a + s.score, 0) / scores.length);
+  const nivel = getNivel(media);
+
+  // Monta resumo das áreas
+  const resumoAreas = scores.map(s => {
+    const n = getNivel(s.score);
+    const resp = estado.respostas[s.area.id] || {};
+    const obsArea = estado.obs[s.area.id] || {};
+    const respostasTexto = s.area.perguntas.map((p, i) => {
+      const nota = resp[i] !== undefined ? resp[i] : '—';
+      const obsTexto = obsArea[i] ? ` | Obs: ${obsArea[i]}` : '';
+      return `  ${i+1}. ${p.texto}\n     Nota: ${nota}/5${obsTexto}`;
+    }).join('\n');
+    return `${s.area.icone} ${s.area.nome.toUpperCase()} — Score: ${s.score}/100 (${n.label})\n${respostasTexto}`;
+  }).join('\n\n');
+
+  // Monta recomendações
+  const REC = {
+    financeiro: [
+      { limite: 40, prio: 'ALTA', titulo: 'Implante controle de fluxo de caixa urgente' },
+      { limite: 70, prio: 'MÉDIA', titulo: 'Estruture a gestão financeira com ferramentas' },
+      { limite: 100, prio: 'BAIXA', titulo: 'Avance para indicadores financeiros estratégicos' },
+    ],
+    vendas: [
+      { limite: 40, prio: 'ALTA', titulo: 'Defina um processo de vendas do zero' },
+      { limite: 70, prio: 'MÉDIA', titulo: 'Fortaleça a presença digital e estratégia de atração' },
+      { limite: 100, prio: 'BAIXA', titulo: 'Implante um CRM e métricas de conversão' },
+    ],
+    operacoes: [
+      { limite: 40, prio: 'ALTA', titulo: 'Documente os processos críticos imediatamente' },
+      { limite: 70, prio: 'MÉDIA', titulo: 'Adote ferramentas de gestão operacional' },
+      { limite: 100, prio: 'BAIXA', titulo: 'Implante indicadores de desempenho (KPIs) operacionais' },
+    ],
+    pessoas: [
+      { limite: 40, prio: 'ALTA', titulo: 'Defina funções, metas e responsabilidades claras' },
+      { limite: 70, prio: 'MÉDIA', titulo: 'Crie uma rotina de reuniões e feedbacks' },
+      { limite: 100, prio: 'BAIXA', titulo: 'Desenvolva um plano de crescimento de carreira' },
+    ]
+  };
+  const recomendacoes = scores.map(s => {
+    const lista = REC[s.area.id];
+    const rec = lista.find(r => s.score <= r.limite) || lista[lista.length-1];
+    return `[${rec.prio}] ${s.area.nome}: ${rec.titulo}`;
+  }).join('\n');
+
+  const params = {
+    empresa:        estado.cliente.empresa || '—',
+    responsavel:    estado.cliente.nome || '—',
+    segmento:       estado.cliente.segmento || '—',
+    funcionarios:   estado.cliente.funcionarios || '—',
+    faturamento:    estado.cliente.faturamento || '—',
+    tempo_mercado:  estado.cliente.tempoMercado || '—',
+    consultor:      estado.cliente.consultor || '—',
+    data:           estado.cliente.data || '—',
+    score_geral:    `${media}/100`,
+    nivel_geral:    nivel.label,
+    score_financeiro:  `${scores[0].score}/100 — ${getNivel(scores[0].score).label}`,
+    score_vendas:      `${scores[1].score}/100 — ${getNivel(scores[1].score).label}`,
+    score_operacoes:   `${scores[2].score}/100 — ${getNivel(scores[2].score).label}`,
+    score_pessoas:     `${scores[3].score}/100 — ${getNivel(scores[3].score).label}`,
+    resumo_areas:   resumoAreas,
+    recomendacoes:  recomendacoes,
+  };
+
+  emailjs.send('service_nls9ble', 'template_w03s7kb', params)
+    .then(() => {
+      btn.textContent = '✅ Enviado!';
+      btn.style.background = '#2d9e5f';
+      status.style.display = 'block';
+      status.style.background = '#e8f5e9';
+      status.style.color = '#2e7d32';
+      status.textContent = '✅ Diagnóstico enviado com sucesso para eron.tutoreanos@gmail.com';
+    })
+    .catch((err) => {
+      btn.disabled = false;
+      btn.textContent = '📧 Enviar por E-mail';
+      status.style.display = 'block';
+      status.style.background = '#ffebee';
+      status.style.color = '#c62828';
+      status.textContent = '❌ Erro ao enviar. Verifique sua conexão e tente novamente.';
+      console.error('EmailJS erro:', err);
+    });
 }
 </script>
 </body>

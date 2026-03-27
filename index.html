@@ -3,1359 +3,938 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diagnóstico Empresarial — Tutoreanos</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Diagnóstico Comercial Avançado — Tutoreanos</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
-  :root {
-    --laranja: #df5f2e;
-    --laranja-escuro: #b84a20;
-    --laranja-claro: #f07040;
-    --preto: #141414;
-    --branco: #ffffff;
-    --cinza-claro: #f5f5f5;
-    --cinza: #e0e0e0;
-    --cinza-medio: #999;
-    --cinza-texto: #444;
-    --sombra: 0 4px 24px rgba(0,0,0,0.10);
-    --radius: 12px;
-  }
+:root{
+  --L:#df5f2e;--LE:#b84a20;--P:#141414;--P2:#1e1e1e;
+  --CR:#f4f1ec;--CZ:#e0ddd8;--CM:#999;--CT:#555;
+  --VE:#e53935;--GR:#2e7d32;--AM:#f9a825;
+  --sh:0 4px 28px rgba(0,0,0,.09);--rd:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Barlow',sans-serif;background:var(--CR);color:var(--P);min-height:100vh;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* HEADER */
+.hdr{background:var(--P);padding:15px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.4);}
+.lga{display:flex;align-items:center;gap:12px;}
+.lgc{width:42px;height:42px;background:var(--L);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.lgc span{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;color:#fff;}
+.lgt .br{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:#fff;}
+.lgt .sb{font-size:10px;color:var(--L);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;}
+.htag{background:var(--L);color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 16px;border-radius:4px;}
+.ctn{max-width:1080px;margin:0 auto;padding:0 24px 60px;}
 
-  body {
-    font-family: 'Barlow', sans-serif;
-    background: #f2f0ec;
-    color: var(--preto);
-    min-height: 100vh;
-  }
+/* INÍCIO */
+#t0{display:none;min-height:calc(100vh - 74px);background:var(--P);position:relative;overflow:hidden;}
+#t0.A{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px;}
+#t0::before{content:'';position:absolute;top:-120px;right:-120px;width:500px;height:500px;background:var(--L);border-radius:50%;opacity:.06;}
+#t0::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:var(--L);border-radius:50%;opacity:.04;}
+.itag{display:inline-block;border:1px solid rgba(223,95,46,.5);color:var(--L);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;border-radius:3px;margin-bottom:28px;position:relative;z-index:1;}
+#t0 h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,6vw,70px);font-weight:900;color:#fff;line-height:1;margin-bottom:20px;position:relative;z-index:1;max-width:780px;}
+#t0 h1 em{font-style:normal;color:var(--L);}
+#t0 p{font-size:17px;color:rgba(255,255,255,.55);max-width:500px;line-height:1.7;margin-bottom:40px;position:relative;z-index:1;}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:40px;position:relative;z-index:1;}
+.chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:30px;padding:8px 18px;font-size:13px;font-weight:500;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:8px;}
+.chip .cn{width:20px;height:20px;background:var(--L);border-radius:50%;font-size:11px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;}
 
-  /* ---- HEADER ---- */
-  .header {
-    background: var(--preto);
-    padding: 18px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
-  }
-  .logo-area { display: flex; align-items: center; gap: 14px; }
-  .logo-circle {
-    width: 46px; height: 46px;
-    background: var(--laranja);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .logo-circle span {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 26px;
-    color: white;
-    line-height: 1;
-    letter-spacing: -1px;
-  }
-  .logo-text { display: flex; flex-direction: column; }
-  .logo-text .brand {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 22px;
-    color: white;
-    letter-spacing: 0.5px;
-  }
-  .logo-text .sub {
-    font-size: 11px;
-    color: var(--laranja);
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .header-badge {
-    background: var(--laranja);
-    color: white;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 7px 18px;
-    border-radius: 4px;
-  }
+/* FORMULÁRIO */
+.tform{display:none;padding:44px 0;}
+.tform.A{display:block;}
+.fcard{background:#fff;border-radius:var(--rd);box-shadow:var(--sh);padding:44px;max-width:700px;margin:0 auto;}
+.fcard h2{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;color:var(--P);margin-bottom:4px;}
+.fsub{color:var(--CM);font-size:14px;margin-bottom:26px;line-height:1.5;}
+.fg{margin-bottom:18px;}
+.fg label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--CT);margin-bottom:7px;}
+.rq{color:var(--L);}
+.fg input,.fg select{width:100%;padding:13px 16px;border:2px solid var(--CZ);border-radius:8px;font-family:'Barlow',sans-serif;font-size:15px;color:var(--P);background:#fafafa;transition:border-color .2s;outline:none;}
+.fg input:focus,.fg select:focus{border-color:var(--L);background:#fff;}
+.fg input.er{border-color:var(--VE);}
+.fg .hint{font-size:11px;color:var(--CM);margin-top:5px;font-style:italic;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.sep{height:1px;background:var(--CZ);margin:22px 0;}
+.slbl{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--L);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;}
 
-  /* ---- LAYOUT ---- */
-  .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 24px 60px;
-  }
+/* Preview funil */
+.fprev{background:var(--CR);border-radius:10px;padding:16px 20px;margin-top:14px;border:1px solid var(--CZ);}
+.fprev .fpt{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--CM);margin-bottom:10px;}
+.fpi{display:flex;gap:14px;flex-wrap:wrap;}
+.fpitem{flex:1;min-width:90px;text-align:center;}
+.fpv{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--L);}
+.fpl{font-size:11px;color:var(--CM);}
+#fprec{font-size:22px;font-weight:800;color:var(--GR);}
 
-  /* ---- TELA INICIAL ---- */
-  #tela-inicio {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: calc(100vh - 82px);
-    text-align: center;
-    padding: 40px 24px;
-  }
-  .hero-tag {
-    display: inline-block;
-    background: var(--laranja);
-    color: white;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 6px 16px;
-    border-radius: 3px;
-    margin-bottom: 24px;
-  }
-  #tela-inicio h1 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(36px, 6vw, 64px);
-    font-weight: 800;
-    color: var(--preto);
-    line-height: 1.05;
-    margin-bottom: 20px;
-    max-width: 700px;
-  }
-  #tela-inicio h1 em {
-    font-style: normal;
-    color: var(--laranja);
-  }
-  #tela-inicio p {
-    font-size: 17px;
-    color: var(--cinza-texto);
-    max-width: 520px;
-    line-height: 1.7;
-    margin-bottom: 40px;
-  }
-  .areas-preview {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 40px;
-  }
-  .area-chip {
-    background: white;
-    border: 2px solid var(--cinza);
-    border-radius: 30px;
-    padding: 8px 18px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--preto);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .area-chip .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--laranja);
-  }
+/* DIAGNÓSTICO */
+#t2{display:none;padding:32px 0;}
+#t2.A{display:block;}
+.dh{background:var(--P);border-radius:var(--rd);padding:20px 30px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.dhi h3{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#fff;}
+.dhi span{font-size:12px;color:var(--CM);}
+.pw{flex:1;min-width:180px;max-width:280px;}
+.pl{display:flex;justify-content:space-between;font-size:11px;color:var(--CM);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.pb{height:4px;background:#333;border-radius:2px;overflow:hidden;}
+.pf{height:100%;background:var(--L);border-radius:2px;transition:width .5s ease;}
+.enav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.enb{padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid var(--CZ);background:#fff;color:var(--CM);transition:all .2s;}
+.enb.A{border-color:var(--L);background:var(--L);color:#fff;}
+.enb.OK{border-color:var(--GR);color:var(--GR);}
+.pcard{background:#fff;border-radius:var(--rd);box-shadow:var(--sh);padding:34px;margin-bottom:18px;}
+.etit{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--P);display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+.eic{width:36px;height:36px;background:var(--L);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.edesc{font-size:13px;color:var(--CM);margin-bottom:24px;line-height:1.6;}
 
-  /* ---- FORMULÁRIO CLIENTE ---- */
-  #tela-cliente {
-    display: none;
-    padding: 48px 0;
-  }
-  .form-card {
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--sombra);
-    padding: 40px;
-    max-width: 640px;
-    margin: 0 auto;
-  }
-  .form-card h2 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--preto);
-    margin-bottom: 6px;
-  }
-  .form-card p { color: var(--cinza-medio); font-size: 14px; margin-bottom: 28px; }
-  .form-group { margin-bottom: 20px; }
-  .form-group label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--cinza-texto);
-    margin-bottom: 8px;
-  }
-  .form-group input, .form-group select {
-    width: 100%;
-    padding: 13px 16px;
-    border: 2px solid var(--cinza);
-    border-radius: 8px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 15px;
-    color: var(--preto);
-    background: var(--cinza-claro);
-    transition: border-color 0.2s;
-    outline: none;
-  }
-  .form-group input:focus, .form-group select:focus { border-color: var(--laranja); background: white; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+/* Bloco numérico intercalado */
+.nbloco{background:linear-gradient(135deg,#fff8f5,#fff3ee);border:2px solid rgba(223,95,46,.2);border-radius:12px;padding:20px 22px;margin-bottom:26px;}
+.nb-tit{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--L);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.nb-row{display:grid;gap:12px;}
+.nb-row.c2{grid-template-columns:1fr 1fr;}
+.nb-row.c3{grid-template-columns:1fr 1fr 1fr;}
+.nb-item label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--CT);margin-bottom:6px;}
+.nb-item input{width:100%;padding:11px 14px;border:2px solid var(--CZ);border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--P);background:#fff;outline:none;transition:border-color .2s;}
+.nb-item input:focus{border-color:var(--L);}
+.nb-item .nhint{font-size:11px;color:var(--CM);margin-top:4px;font-style:italic;}
+.nb-calc{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;}
+.nb-calc-item{flex:1;min-width:120px;background:rgba(223,95,46,.08);border-radius:8px;padding:10px 14px;text-align:center;}
+.nb-calc-item .ncv{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--L);}
+.nb-calc-item .ncl{font-size:11px;color:var(--CM);margin-top:2px;}
 
-  /* ---- DIAGNÓSTICO ---- */
-  #tela-diagnostico { display: none; padding: 40px 0; }
-  .diag-header {
-    background: var(--preto);
-    border-radius: var(--radius);
-    padding: 24px 32px;
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .diag-header .cliente-info h3 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: white;
-  }
-  .diag-header .cliente-info span {
-    font-size: 13px;
-    color: var(--cinza-medio);
-  }
-  .progress-wrap { flex: 1; min-width: 200px; max-width: 320px; }
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--cinza-medio);
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-  .progress-bar {
-    height: 6px;
-    background: #333;
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--laranja);
-    border-radius: 3px;
-    transition: width 0.5s ease;
-  }
+/* Perguntas */
+.pi{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--CZ);}
+.pi:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.ptxt{font-size:15px;font-weight:500;color:var(--P);margin-bottom:13px;line-height:1.55;}
+.pn{display:inline-block;background:var(--L);color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;padding:2px 7px;border-radius:4px;margin-right:7px;}
+.st{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;margin-left:6px;text-transform:uppercase;letter-spacing:.5px;vertical-align:middle;}
+.sS{background:#e3f2fd;color:#1565c0;}.sP{background:#fce4ec;color:#880e4f;}.sI{background:#fff3e0;color:#e65100;}.sN{background:#e8f5e9;color:#1b5e20;}
+.ew{display:flex;gap:7px;flex-wrap:wrap;}
+.eb{width:46px;height:46px;border:2px solid var(--CZ);border-radius:8px;background:#fff;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--CM);cursor:pointer;transition:all .15s;}
+.eb:hover{border-color:var(--L);color:var(--L);}
+.eb.S{background:var(--L);border-color:var(--L);color:#fff;}
+.el{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--CM);font-style:italic;}
+.ol{font-size:11px;color:var(--CM);margin-top:12px;display:block;text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+.oi{width:100%;padding:10px 13px;border:2px solid var(--CZ);border-radius:8px;font-family:'Barlow',sans-serif;font-size:13px;color:var(--P);resize:vertical;min-height:66px;outline:none;margin-top:6px;transition:border-color .2s;}
+.oi:focus{border-color:var(--L);}
+.bnav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;flex-wrap:wrap;gap:10px;}
 
-  .area-tabs {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
-  .area-tab {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    border: 2px solid var(--cinza);
-    background: white;
-    color: var(--cinza-medio);
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .area-tab.active {
-    border-color: var(--laranja);
-    background: var(--laranja);
-    color: white;
-  }
-  .area-tab.completed {
-    border-color: #2d9e5f;
-    color: #2d9e5f;
-  }
-  .area-tab.completed .check { display: inline; }
-  .area-tab .check { display: none; }
+/* RESULTADO */
+#t3{display:none;padding:32px 0;}
+#t3.A{display:block;}
+.rhero{background:var(--P);border-radius:var(--rd);padding:36px;margin-bottom:20px;position:relative;overflow:hidden;}
+.rhero::before{content:'';position:absolute;top:-60px;right:-60px;width:280px;height:280px;background:var(--L);border-radius:50%;opacity:.08;}
+.rtop{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:26px;}
+.rtop h2{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--L);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.rtop h3{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:10px;}
+.sbig .sn{font-family:'Barlow Condensed',sans-serif;font-size:80px;font-weight:900;color:var(--L);line-height:1;}
+.sbig .sd{font-size:22px;color:var(--CM);font-weight:300;}
+.sbig .sl{font-size:11px;color:var(--CM);text-transform:uppercase;letter-spacing:1px;margin-top:3px;}
+.nbadge{display:inline-block;padding:7px 18px;border-radius:30px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;}
+.nc{background:#e53935;color:#fff;}.na{background:#f9a825;color:#fff;}.nm{background:#2196F3;color:#fff;}.ngb{background:#4CAF50;color:#fff;}.ne{background:#8BC34A;color:#fff;}
 
-  .perguntas-card {
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--sombra);
-    padding: 36px;
-    margin-bottom: 24px;
-  }
-  .area-titulo {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--preto);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 6px;
-  }
-  .area-titulo .icone {
-    width: 36px; height: 36px;
-    background: var(--laranja);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-  }
-  .area-desc { font-size: 13px; color: var(--cinza-medio); margin-bottom: 28px; }
+.wcard{background:#fff;border-radius:var(--rd);box-shadow:var(--sh);padding:28px;margin-bottom:20px;}
+.wcard h4{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--P);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 
-  .pergunta-item { margin-bottom: 28px; }
-  .pergunta-item:last-child { margin-bottom: 0; }
-  .pergunta-texto {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--preto);
-    margin-bottom: 14px;
-    line-height: 1.5;
-  }
-  .pergunta-numero {
-    display: inline-block;
-    background: var(--laranja);
-    color: white;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-right: 8px;
-  }
-  .escala-wrap { display: flex; gap: 8px; flex-wrap: wrap; }
-  .escala-btn {
-    width: 44px; height: 44px;
-    border: 2px solid var(--cinza);
-    border-radius: 8px;
-    background: white;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--cinza-medio);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .escala-btn:hover { border-color: var(--laranja); color: var(--laranja); }
-  .escala-btn.selected {
-    background: var(--laranja);
-    border-color: var(--laranja);
-    color: white;
-  }
-  .escala-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 6px;
-    font-size: 11px;
-    color: var(--cinza-medio);
-    font-style: italic;
-  }
+/* Funil visual */
+.fstep{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--CZ);}
+.fstep:last-child{border-bottom:none;}
+.fslbl{width:180px;font-size:13px;font-weight:500;color:var(--CT);flex-shrink:0;}
+.fsbw{flex:1;height:30px;background:#f0ede8;border-radius:6px;overflow:hidden;position:relative;}
+.fsbar{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:#fff;min-width:50px;}
+.fsval{width:100px;text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--P);flex-shrink:0;}
+.fsdrop{font-size:11px;color:var(--VE);font-weight:600;width:80px;flex-shrink:0;}
 
-  .obs-input {
-    width: 100%;
-    padding: 12px 14px;
-    border: 2px solid var(--cinza);
-    border-radius: 8px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    color: var(--preto);
-    resize: vertical;
-    min-height: 80px;
-    outline: none;
-    margin-top: 12px;
-    transition: border-color 0.2s;
-  }
-  .obs-input:focus { border-color: var(--laranja); }
-  .obs-label { font-size: 12px; color: var(--cinza-medio); margin-top: 12px; display: block; }
+/* Impacto financeiro */
+.icard{border-radius:var(--rd);padding:26px 28px;margin-bottom:20px;background:linear-gradient(135deg,#0d0d0d,#1a0500);border:1px solid rgba(229,57,53,.3);}
+.icard h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--VE);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+.igrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;}
+.ii .iv{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:900;line-height:1;}
+.ii .ib{font-size:12px;color:rgba(255,255,255,.4);margin-top:3px;}
+.ii .is{font-size:11px;color:rgba(255,255,255,.22);margin-top:2px;font-style:italic;}
+.vr{color:var(--VE);}.vg{color:#4CAF50;}.vo{color:var(--L);}
 
-  /* ---- RESULTADO ---- */
-  #tela-resultado { display: none; padding: 40px 0; }
+/* Simulação */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+.sitem{border-radius:10px;padding:20px;text-align:center;border:2px solid var(--CZ);}
+.sitem.D{border-color:var(--L);background:linear-gradient(135deg,#fff8f5,#fff);}
+.sitem .sp{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--CM);text-transform:uppercase;margin-bottom:6px;}
+.sitem.D .sp{color:var(--L);}
+.sitem .sv{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--L);line-height:1;}
+.sitem .sd2{font-size:12px;color:var(--CM);margin-top:5px;line-height:1.4;}
 
-  .resultado-hero {
-    background: var(--preto);
-    border-radius: var(--radius);
-    padding: 40px;
-    margin-bottom: 28px;
-    position: relative;
-    overflow: hidden;
-  }
-  .resultado-hero::before {
-    content: '';
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 200px; height: 200px;
-    background: var(--laranja);
-    border-radius: 50%;
-    opacity: 0.12;
-  }
-  .resultado-hero .top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-bottom: 32px;
-  }
-  .resultado-hero h2 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--laranja);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .resultado-hero h3 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 32px;
-    font-weight: 800;
-    color: white;
-  }
-  .score-big {
-    text-align: center;
-  }
-  .score-big .num {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 80px;
-    font-weight: 800;
-    color: var(--laranja);
-    line-height: 1;
-  }
-  .score-big .den {
-    font-size: 22px;
-    color: var(--cinza-medio);
-    font-weight: 300;
-  }
-  .score-big .label {
-    font-size: 12px;
-    color: var(--cinza-medio);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 4px;
-  }
-  .maturidade-badge {
-    display: inline-block;
-    padding: 8px 20px;
-    border-radius: 30px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin-top: 8px;
-  }
-  .nivel-critico { background: #ff4444; color: white; }
-  .nivel-alerta  { background: #ff9800; color: white; }
-  .nivel-moderado{ background: #2196F3; color: white; }
-  .nivel-bom     { background: #4CAF50; color: white; }
-  .nivel-excelente{ background: #8BC34A; color: white; }
+/* LTV */
+.ltv-card{background:linear-gradient(135deg,#0a1a0a,#0d2010);border:1px solid rgba(46,125,50,.3);border-radius:var(--rd);padding:26px 28px;margin-bottom:20px;}
+.ltv-card h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#4CAF50;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+.ltv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;}
+.ltv-item .lv{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:900;color:#4CAF50;line-height:1;}
+.ltv-item .lb{font-size:12px;color:rgba(255,255,255,.4);margin-top:3px;}
+.ltv-item .ls{font-size:11px;color:rgba(255,255,255,.22);margin-top:2px;font-style:italic;}
 
-  .cards-scores {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-  .score-card {
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--sombra);
-    padding: 22px 20px;
-    border-left: 4px solid var(--laranja);
-    transition: transform 0.2s;
-  }
-  .score-card:hover { transform: translateY(-2px); }
-  .score-card .area-nome {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--cinza-medio);
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .score-card .area-pontos {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 36px;
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-  .score-card .barra {
-    height: 5px;
-    background: var(--cinza);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .score-card .barra-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 1s ease;
-  }
-  .score-card .nivel-texto {
-    font-size: 12px;
-    font-weight: 600;
-    margin-top: 6px;
-  }
+/* Gargalos */
+.gi{display:flex;align-items:flex-start;gap:13px;padding:13px 0;border-bottom:1px solid var(--CZ);}
+.gi:last-child{border-bottom:none;}
+.gd{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.gc{background:var(--VE);box-shadow:0 0 8px rgba(229,57,53,.5);}.ga{background:var(--AM);}.gg{background:var(--GR);}
+.gii h5{font-size:14px;font-weight:600;color:var(--P);margin-bottom:3px;}
+.gii p{font-size:12px;color:var(--CM);line-height:1.5;}
+.gis{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;margin-left:auto;flex-shrink:0;}
 
-  .graficos-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-bottom: 28px;
-  }
-  @media (max-width: 700px) { .graficos-grid { grid-template-columns: 1fr; } }
-  .grafico-card {
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--sombra);
-    padding: 24px;
-  }
-  .grafico-card h4 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--preto);
-    margin-bottom: 18px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--cinza);
-  }
-  .chart-container { position: relative; }
+/* Dados numéricos por etapa no resultado */
+.edata-card{background:#fff;border-radius:var(--rd);box-shadow:var(--sh);padding:24px;margin-bottom:20px;}
+.edata-card h4{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--P);margin-bottom:16px;border-bottom:2px solid var(--CZ);padding-bottom:10px;}
+.edata-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;}
+.edata-item{background:var(--CR);border-radius:8px;padding:12px 14px;}
+.edata-item .dv{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;color:var(--L);}
+.edata-item .dl{font-size:11px;color:var(--CM);margin-top:2px;}
+.edata-item .dbench{font-size:11px;margin-top:4px;font-weight:600;}
+.bench-ok{color:var(--GR);}.bench-bad{color:var(--VE);}.bench-warn{color:var(--AM);}
 
-  .recomendacoes-card {
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--sombra);
-    padding: 32px;
-    margin-bottom: 24px;
-  }
-  .recomendacoes-card h4 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--preto);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .recomendacoes-card h4 span {
-    background: var(--laranja);
-    color: white;
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
-  .rec-item {
-    display: flex;
-    gap: 16px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--cinza);
-  }
-  .rec-item:last-child { border-bottom: none; }
-  .rec-prioridade {
-    flex-shrink: 0;
-    width: 60px;
-    text-align: center;
-  }
-  .rec-prioridade .prio-badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .prio-alta { background: #ffebee; color: #c62828; }
-  .prio-media { background: #fff3e0; color: #e65100; }
-  .prio-baixa { background: #e8f5e9; color: #2e7d32; }
-  .rec-conteudo h5 {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--preto);
-    margin-bottom: 4px;
-  }
-  .rec-conteudo p { font-size: 13px; color: var(--cinza-medio); line-height: 1.5; }
+/* Benchmark */
+.btbl{width:100%;border-collapse:collapse;}
+.btbl th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--CM);padding:8px 12px;text-align:left;border-bottom:2px solid var(--CZ);}
+.btbl td{padding:11px 12px;font-size:14px;border-bottom:1px solid var(--CZ);}
+.btbl tr:last-child td{border-bottom:none;}
+.cli{font-weight:600;color:var(--P);}
+.bb{color:var(--VE);font-weight:700;}.bk{color:var(--AM);font-weight:700;}.bg{color:var(--GR);font-weight:700;}.br2{color:var(--CM);}
 
-  .cta-card {
-    background: linear-gradient(135deg, var(--laranja), var(--laranja-escuro));
-    border-radius: var(--radius);
-    padding: 36px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 24px;
-  }
-  .cta-card h3 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 28px;
-    font-weight: 800;
-    color: white;
-    margin-bottom: 6px;
-  }
-  .cta-card p { color: rgba(255,255,255,0.8); font-size: 14px; max-width: 400px; }
+/* Gráficos */
+.gg2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;}
+@media(max-width:650px){.gg2{grid-template-columns:1fr;}}
+.gc2{background:#fff;border-radius:var(--rd);box-shadow:var(--sh);padding:22px;}
+.gc2 h4{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--P);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--CZ);}
 
-  /* ---- BOTÕES ---- */
-  .btn {
-    padding: 14px 32px;
-    border-radius: 8px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .btn-laranja {
-    background: var(--laranja);
-    color: white;
-  }
-  .btn-laranja:hover { background: var(--laranja-escuro); transform: translateY(-1px); }
-  .btn-preto {
-    background: var(--preto);
-    color: white;
-  }
-  .btn-preto:hover { background: #333; }
-  .btn-branco {
-    background: white;
-    color: var(--preto);
-  }
-  .btn-branco:hover { background: var(--cinza-claro); }
-  .btn-outline {
-    background: transparent;
-    color: var(--laranja);
-    border: 2px solid var(--laranja);
-  }
-  .btn-outline:hover { background: var(--laranja); color: white; }
+/* Ancoragem */
+.acard{background:linear-gradient(135deg,var(--P),var(--P2));border-radius:var(--rd);padding:34px;margin-bottom:20px;border:1px solid rgba(223,95,46,.3);}
+.acard h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--L);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+.atit{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:10px;}
+.atit em{font-style:normal;color:var(--L);}
+.adesc{font-size:14px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:20px;}
+.aitems{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:20px;}
+.aitem{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px;}
+.aitem .aic{font-size:20px;margin-bottom:8px;}
+.aitem h5{font-size:13px;font-weight:600;color:#fff;margin-bottom:4px;}
+.aitem p{font-size:12px;color:rgba(255,255,255,.4);line-height:1.5;}
+.roib{background:rgba(223,95,46,.15);border:1px solid rgba(223,95,46,.4);border-radius:10px;padding:18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.roib .rv{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--L);flex-shrink:0;}
+.roib p{font-size:14px;color:rgba(255,255,255,.6);line-height:1.6;}
+.roib strong{color:#fff;}
 
-  .btn-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 24px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
+/* Custo */
+.ccard{background:linear-gradient(135deg,#130800,#1f0d00);border:1px solid rgba(223,95,46,.25);border-radius:var(--rd);padding:26px;margin-bottom:20px;}
+.ccard h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--L);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.ctit{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:14px;line-height:1.2;}
+.cits{display:flex;flex-direction:column;gap:9px;}
+.cit{display:flex;align-items:flex-start;gap:11px;padding:12px;background:rgba(255,255,255,.04);border-radius:8px;border-left:3px solid var(--L);}
+.cit .ci{font-size:17px;flex-shrink:0;}
+.cit p{font-size:13px;color:rgba(255,255,255,.65);line-height:1.5;}
+.cit strong{color:#fff;}
 
-  /* ---- SEPARADOR ---- */
-  .sep { height: 1px; background: var(--cinza); margin: 24px 0; }
+/* Exec */
+.ecard{background:#fff;border-radius:var(--rd);box-shadow:var(--sh);padding:28px;margin-bottom:20px;border-left:4px solid var(--L);}
+.ecard h4{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--P);margin-bottom:16px;}
+.es{margin-bottom:14px;}
+.es h5{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--L);margin-bottom:6px;}
+.es p{font-size:13px;color:var(--CT);line-height:1.6;}
+.etags{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px;}
+.etag{padding:4px 11px;border-radius:20px;font-size:12px;font-weight:600;}
+.tc{background:#ffebee;color:#c62828;}.tm{background:#fff3e0;color:#e65100;}.tg{background:#e8f5e9;color:#2e7d32;}
 
-  /* ---- ANIMAÇÕES ---- */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .fade-up { animation: fadeUp 0.4s ease both; }
+/* CTA */
+.ctac{background:linear-gradient(135deg,var(--L),var(--LE));border-radius:var(--rd);padding:36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.ctac h3{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;margin-bottom:7px;}
+.ctac p{color:rgba(255,255,255,.8);font-size:14px;max-width:400px;line-height:1.6;}
 
-  @media (max-width: 600px) {
-    .header { padding: 14px 16px; }
-    .form-row { grid-template-columns: 1fr; }
-    .graficos-grid { grid-template-columns: 1fr; }
-    .form-card, .perguntas-card { padding: 24px; }
-  }
+/* Botões */
+.btn{padding:13px 26px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:7px;}
+.bL{background:var(--L);color:#fff;}.bL:hover{background:var(--LE);transform:translateY(-1px);}
+.bP{background:var(--P);color:#fff;}.bP:hover{background:#2a2a2a;}
+.bB{background:#fff;color:var(--P);}.bB:hover{background:#f0f0f0;}
+.bO{background:transparent;color:var(--L);border:2px solid var(--L);}.bO:hover{background:var(--L);color:#fff;}
+
+@keyframes fu{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fu .4s ease both;}
+.estat{display:none;margin-top:14px;padding:13px 18px;border-radius:10px;font-size:14px;font-weight:500;text-align:center;background:#e8f5e9;color:#2e7d32;}
+@media(max-width:600px){.hdr{padding:12px 16px;}.fr,.fr3{grid-template-columns:1fr;}.fcard,.pcard{padding:22px;}.rtop{flex-direction:column;}}
 </style>
 </head>
 <body>
-
-<!-- HEADER -->
-<header class="header">
-  <div class="logo-area">
-    <div class="logo-circle"><span>t.</span></div>
-    <div class="logo-text">
-      <span class="brand">tutoreanos</span>
-      <span class="sub">Consultores de Negócios</span>
-    </div>
+<header class="hdr">
+  <div class="lga">
+    <div class="lgc"><span>t.</span></div>
+    <div class="lgt"><div class="br">tutoreanos</div><div class="sb">Consultores de Negócios</div></div>
   </div>
-  <div class="header-badge">Diagnóstico Empresarial</div>
+  <div class="htag">Diagnóstico Comercial</div>
 </header>
 
-<!-- TELA INÍCIO -->
-<div id="tela-inicio">
-  <h1>Diagnóstico <em>360°</em><br>do seu Negócio</h1>
-  <p>Avalie em poucos minutos o nível de maturidade da sua empresa em 4 dimensões essenciais e descubra onde estão as maiores oportunidades de crescimento.</p>
-  <div class="areas-preview">
-    <div class="area-chip"><span class="dot"></span>Financeiro</div>
-    <div class="area-chip"><span class="dot"></span>Vendas & Marketing</div>
-    <div class="area-chip"><span class="dot"></span>Operações & Processos</div>
-    <div class="area-chip"><span class="dot"></span>Pessoas & Gestão</div>
+<!-- INÍCIO -->
+<div id="t0" class="A">
+  <div class="itag">Diagnóstico Avançado de Vendas</div>
+  <h1>Descubra exatamente<br>quanto seu processo<br>comercial <em>está custando</em></h1>
+  <p>Coletamos dados reais do seu funil em cada etapa, calculamos sua perda mensal e mostramos o caminho para reverter isso.</p>
+  <div class="chips">
+    <div class="chip"><span class="cn">1</span>Cadastro</div>
+    <div class="chip"><span class="cn">2</span>Prospecção</div>
+    <div class="chip"><span class="cn">3</span>Abordagem</div>
+    <div class="chip"><span class="cn">4</span>Qualificação</div>
+    <div class="chip"><span class="cn">5</span>Proposta</div>
+    <div class="chip"><span class="cn">6</span>Fechamento</div>
   </div>
-  <button class="btn btn-laranja" onclick="irParaCliente()">
-    ▶ &nbsp; Iniciar Diagnóstico
-  </button>
+  <button class="btn bL" onclick="show('t0','t1')" style="font-size:18px;padding:16px 40px;">▶  Iniciar Diagnóstico</button>
 </div>
 
-<!-- TELA DADOS CLIENTE -->
-<div id="tela-cliente">
-  <div class="container">
-    <div class="form-card fade-up">
-      <h2>Dados da Empresa</h2>
-      <p>Preencha os dados do cliente para iniciar o diagnóstico</p>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Nome do Responsável *</label>
-          <input type="text" id="nome-cliente" placeholder="Ex: João Silva">
-        </div>
-        <div class="form-group">
-          <label>Nome da Empresa *</label>
-          <input type="text" id="nome-empresa" placeholder="Ex: Silva & Filhos Ltda">
-        </div>
+<!-- CADASTRO -->
+<div id="t1" class="tform">
+  <div class="ctn">
+    <div class="fcard fu">
+      <h2>Dados do Cliente</h2>
+      <p class="fsub">O resultado será enviado para o email informado. Campos com <span class="rq">*</span> são obrigatórios.</p>
+      <div class="fr">
+        <div class="fg"><label>Nome Completo <span class="rq">*</span></label><input id="fn" placeholder="Ex: João Silva" type="text"></div>
+        <div class="fg"><label>Empresa <span class="rq">*</span></label><input id="fe" placeholder="Ex: Silva & Filhos" type="text"></div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Segmento</label>
-          <select id="segmento">
-            <option value="">Selecione...</option>
-            <option>Comércio Varejista</option>
-            <option>Comércio Atacadista</option>
-            <option>Serviços</option>
-            <option>Indústria / Manufatura</option>
-            <option>Alimentação / Gastronomia</option>
-            <option>Saúde e Bem-estar</option>
-            <option>Tecnologia</option>
-            <option>Educação</option>
-            <option>Construção / Imóveis</option>
-            <option>Outro</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Nº de Funcionários</label>
-          <select id="funcionarios">
-            <option value="">Selecione...</option>
-            <option>1 (MEI)</option>
-            <option>2 a 5</option>
-            <option>6 a 19</option>
-            <option>20 a 49</option>
-            <option>50 ou mais</option>
-          </select>
-        </div>
+      <div class="fr">
+        <div class="fg"><label>E-mail <span class="rq">*</span></label><input id="fem" placeholder="joao@empresa.com.br" type="email"></div>
+        <div class="fg"><label>WhatsApp <span class="rq">*</span></label><input id="ftel" placeholder="(00) 00000-0000" type="tel"></div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Faturamento Mensal (aprox.)</label>
-          <select id="faturamento">
-            <option value="">Selecione...</option>
-            <option>Até R$ 10 mil</option>
-            <option>R$ 10 mil – R$ 50 mil</option>
-            <option>R$ 50 mil – R$ 150 mil</option>
-            <option>R$ 150 mil – R$ 500 mil</option>
-            <option>Acima de R$ 500 mil</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Tempo de Mercado</label>
-          <select id="tempo-mercado">
-            <option value="">Selecione...</option>
-            <option>Menos de 1 ano</option>
-            <option>1 a 3 anos</option>
-            <option>3 a 7 anos</option>
-            <option>Mais de 7 anos</option>
-          </select>
-        </div>
+      <div class="fr">
+        <div class="fg"><label>Segmento</label><select id="fseg"><option value="">Selecione...</option><option>Comércio Varejista</option><option>Comércio Atacadista</option><option>Serviços</option><option>Indústria</option><option>Alimentação</option><option>Saúde</option><option>Tecnologia</option><option>Educação</option><option>Construção / Imóveis</option><option>Outro</option></select></div>
+        <div class="fg"><label>Nº de Vendedores</label><select id="fv"><option value="">Selecione...</option><option>Só eu (dono vende)</option><option>1 a 3</option><option>4 a 10</option><option>Mais de 10</option></select></div>
       </div>
-      <div class="form-group">
-        <label>Consultor Responsável</label>
-        <input type="text" id="nome-consultor" placeholder="Seu nome">
+      <div class="fg"><label>Consultor Responsável</label><input id="fc" placeholder="Seu nome" type="text"></div>
+      <div class="sep"></div>
+      <div class="slbl">📊 Dados Iniciais do Funil</div>
+      <p class="fsub" style="margin-bottom:18px;">Dados base para calcular perda financeira. Vamos coletar mais dados dentro de cada etapa.</p>
+      <div class="fr">
+        <div class="fg"><label>Ticket Médio (R$) <span class="rq">*</span></label><input id="ftk" placeholder="Ex: 2500" type="number" min="0" oninput="calcPrev()"><div class="hint">Valor médio por venda fechada</div></div>
+        <div class="fg"><label>Taxa de Conversão Atual (%) <span class="rq">*</span></label><input id="fco" placeholder="Ex: 20" type="number" min="0" max="100" oninput="calcPrev()"><div class="hint">% de leads que viram clientes</div></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Leads por Mês <span class="rq">*</span></label><input id="fld" placeholder="Ex: 50" type="number" min="0" oninput="calcPrev()"><div class="hint">Contatos/oportunidades que entram</div></div>
+        <div class="fg"><label>Clientes Ativos na Base</label><input id="fba" placeholder="Ex: 80" type="number" min="0"><div class="hint">Total de clientes ativos hoje</div></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>LTV Médio (R$)</label><input id="fltv" placeholder="Ex: 12000" type="number" min="0"><div class="hint">Receita total média por cliente</div></div>
+        <div class="fg"><label>Ciclo Médio de Vendas (dias)</label><input id="fci" placeholder="Ex: 15" type="number" min="0"><div class="hint">Do 1º contato ao fechamento</div></div>
+      </div>
+      <div class="fprev" id="fpv" style="display:none;">
+        <div class="fpt">📈 Receita atual estimada</div>
+        <div class="fpi">
+          <div class="fpitem"><div class="fpv" id="fpvd">0</div><div class="fpl">Vendas/mês</div></div>
+          <div class="fpitem"><div class="fpv" id="fptk">R$ 0</div><div class="fpl">Ticket médio</div></div>
+          <div class="fpitem"><div id="fprec">R$ 0</div><div class="fpl">Receita/mês estimada</div></div>
+        </div>
       </div>
       <div class="sep"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-        <button class="btn btn-outline" onclick="irParaInicio()">← Voltar</button>
-        <button class="btn btn-laranja" onclick="iniciarDiagnostico()">Iniciar Diagnóstico →</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <button class="btn bO" onclick="show('t1','t0')">← Voltar</button>
+        <button class="btn bL" onclick="iniciar()">Iniciar Diagnóstico →</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- TELA DIAGNÓSTICO -->
-<div id="tela-diagnostico">
-  <div class="container">
-    <div class="diag-header">
-      <div class="cliente-info">
-        <h3 id="diag-nome-empresa">Empresa</h3>
-        <span id="diag-info-extra">Diagnóstico em andamento</span>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span id="prog-texto">Área 1 de 4</span>
-          <span id="prog-pct">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-        </div>
+<!-- DIAGNÓSTICO -->
+<div id="t2">
+  <div class="ctn">
+    <div class="dh">
+      <div class="dhi"><h3 id="de">Empresa</h3><span id="ds"></span></div>
+      <div class="pw">
+        <div class="pl"><span id="pt">Etapa 1 de 5</span><span id="pp">0%</span></div>
+        <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
       </div>
     </div>
-
-    <div class="area-tabs" id="area-tabs"></div>
-
-    <div class="perguntas-card fade-up" id="perguntas-card">
-      <div class="area-titulo" id="area-titulo"></div>
-      <p class="area-desc" id="area-desc"></p>
-      <div id="perguntas-lista"></div>
-      <div class="btn-nav">
-        <button class="btn btn-outline" id="btn-anterior" onclick="areaAnterior()">← Anterior</button>
-        <button class="btn btn-laranja" id="btn-proximo" onclick="areaProxima()">Próxima Área →</button>
+    <div class="enav" id="enav"></div>
+    <div class="pcard fu">
+      <div class="etit" id="etit"></div>
+      <p class="edesc" id="edesc"></p>
+      <div id="pergs"></div>
+      <div class="bnav">
+        <button class="btn bO" id="bant" onclick="etA()">← Anterior</button>
+        <button class="btn bL" id="bprx">Próxima →</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- TELA RESULTADO -->
-<div id="tela-resultado">
-  <div class="container">
-    <div class="resultado-hero fade-up">
-      <div class="top">
+<!-- RESULTADO -->
+<div id="t3">
+  <div class="ctn">
+
+    <div class="rhero fu">
+      <div class="rtop">
         <div>
-          <h2>Diagnóstico Concluído</h2>
-          <h3 id="res-empresa-nome">Empresa</h3>
-          <div id="maturidade-badge" class="maturidade-badge" style="margin-top:10px;"></div>
+          <h2>Diagnóstico Comercial Concluído</h2>
+          <h3 id="re"></h3>
+          <div id="rbadge" class="nbadge" style="margin-top:10px;"></div>
         </div>
-        <div class="score-big">
-          <div><span class="num" id="score-total">0</span><span class="den">/100</span></div>
-          <div class="label">Score Geral</div>
-        </div>
-      </div>
-      <div id="cards-scores" class="cards-scores"></div>
-    </div>
-
-    <div class="graficos-grid">
-      <div class="grafico-card">
-        <h4>🕸️ Radar de Maturidade</h4>
-        <div class="chart-container" style="height:280px;">
-          <canvas id="grafico-radar"></canvas>
+        <div class="sbig" style="text-align:center;">
+          <div><span class="sn" id="rsc">0</span><span class="sd">/100</span></div>
+          <div class="sl">Maturidade Comercial</div>
         </div>
       </div>
-      <div class="grafico-card">
-        <h4>📊 Score por Área</h4>
-        <div class="chart-container" style="height:280px;">
-          <canvas id="grafico-barras"></canvas>
-        </div>
-      </div>
+      <div id="retapas" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;"></div>
     </div>
 
-    <div class="grafico-card" style="margin-bottom:28px;">
-      <h4>📈 Distribuição das Respostas</h4>
-      <div class="chart-container" style="height:220px;">
-        <canvas id="grafico-linha"></canvas>
-      </div>
+    <div class="wcard fu">
+      <h4>🔽 Funil de Vendas Atual</h4>
+      <div id="fsteps"></div>
     </div>
 
-    <div class="recomendacoes-card" id="recomendacoes-card">
-      <h4><span>💡</span> Recomendações Prioritárias</h4>
-      <div id="lista-recomendacoes"></div>
+    <div class="icard fu">
+      <h4>⚠ IMPACTO FINANCEIRO — PERDA POR GARGALOS REAIS</h4>
+      <div class="igrid" id="igrid"></div>
     </div>
 
-    <div class="cta-card">
+    <div class="ltv-card fu">
+      <h4>♻ ANÁLISE DE LTV E BASE DE CLIENTES</h4>
+      <div class="ltv-grid" id="ltvgrid"></div>
+    </div>
+
+    <div class="wcard fu">
+      <h4>📈 Simulação: E se melhorar a conversão?</h4>
+      <div class="sgrid" id="sgrid"></div>
+    </div>
+
+    <div id="edata-section"></div>
+
+    <div class="wcard fu">
+      <h4>🔍 Gargalos Identificados por Etapa</h4>
+      <div id="glist"></div>
+    </div>
+
+    <div class="wcard fu">
+      <h4>📊 Benchmark: Você vs Mercado</h4>
+      <table class="btbl" id="btbl"></table>
+    </div>
+
+    <div class="gg2">
+      <div class="gc2"><h4>🕸 Radar Comercial</h4><div style="height:270px;position:relative;"><canvas id="gr"></canvas></div></div>
+      <div class="gc2"><h4>📊 Score por Etapa</h4><div style="height:270px;position:relative;"><canvas id="gb"></canvas></div></div>
+    </div>
+
+    <div class="acard fu">
+      <h4>💎 Ancoragem de Valor — Tutoreanos</h4>
+      <div class="atit" id="atit"></div>
+      <p class="adesc" id="adesc"></p>
+      <div class="aitems" id="aitems"></div>
+      <div class="roib" id="roib"></div>
+    </div>
+
+    <div class="ccard fu">
+      <h4>⏰ Custo de Não Agir</h4>
+      <div class="ctit" id="ctit"></div>
+      <div class="cits" id="cits"></div>
+    </div>
+
+    <div class="ecard fu">
+      <h4>📋 Resumo Executivo — Pronto para Reunião</h4>
+      <div id="exec"></div>
+    </div>
+
+    <div class="ctac">
       <div>
-        <h3>Pronto para transformar seu negócio?</h3>
-        <p>Este diagnóstico revelou pontos críticos que, com a consultoria certa, podem se tornar seus maiores diferenciais competitivos.</p>
+        <h3>Vamos transformar esses números juntos?</h3>
+        <p>Este diagnóstico mostrou exatamente onde estão os gargalos. A Tutoreanos tem o método para resolver cada um com acompanhamento próximo.</p>
       </div>
-      <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
-        <button class="btn btn-branco" onclick="novodiagnostico()">+ Novo Diagnóstico</button>
-        <button class="btn btn-preto" onclick="window.print()">🖨 Imprimir Relatório</button>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button class="btn bB" onclick="novoDiag()">+ Novo Diagnóstico</button>
+        <button class="btn bP" onclick="window.print()">🖨 Imprimir</button>
       </div>
     </div>
+    <div class="estat" id="est">✅ Diagnóstico enviado para o email do cliente e para eron.tutoreanos@gmail.com</div>
   </div>
 </div>
 
 <script>
-// ===== DADOS =====
-const AREAS = [
+// ===== ETAPAS COM BLOCOS NUMÉRICOS INTERCALADOS =====
+const ETAPAS = [
   {
-    id: 'financeiro',
-    nome: 'Financeiro',
-    icone: '💰',
-    desc: 'Avalia o controle financeiro, fluxo de caixa, precificação e saúde financeira da empresa.',
-    perguntas: [
-      { texto: 'A empresa possui controle de fluxo de caixa atualizado (entradas e saídas)?', obs: true },
-      { texto: 'Os custos fixos e variáveis são conhecidos e monitorados mensalmente?', obs: false },
-      { texto: 'A precificação dos produtos/serviços é feita com base em dados (custo + margem)?', obs: true },
-      { texto: 'A empresa separa as finanças pessoais das finanças do negócio?', obs: false },
-      { texto: 'Existe reserva de capital ou limite de crédito disponível para emergências?', obs: true },
+    id:'prospeccao', nome:'Prospecção', icone:'🎯',
+    desc:'Avalia como a empresa gera e atrai oportunidades de negócio. Vamos coletar os números reais desta etapa.',
+    numBloco:{
+      titulo:'📊 Números da Prospecção',
+      campos:[
+        {id:'n_leads_semana', label:'Leads / Semana', placeholder:'Ex: 12', hint:'Novos contatos prospectados por semana'},
+        {id:'n_canais', label:'Nº de Canais Ativos', placeholder:'Ex: 3', hint:'WhatsApp, Instagram, indicação...'},
+        {id:'n_indicacoes_mes', label:'Indicações / Mês', placeholder:'Ex: 5', hint:'Leads vindos de clientes indicando'},
+      ],
+      cols:3,
+      calc:(vals)=>{
+        const lsem = vals.n_leads_semana||0;
+        const lmes = lsem*4;
+        return lmes>0?[{v:`${lmes}`,l:'Leads estimados/mês'},{v:`${vals.n_canais||0}`,l:'Canais de prospecção'}]:[];
+      }
+    },
+    perguntas:[
+      {t:'A empresa possui estratégia ativa de prospecção (outbound, inbound, indicações estruturadas)?',spin:'S',obs:true},
+      {t:'Existe meta clara de novos leads por semana e alguém responsável por bater essa meta?',spin:'S',obs:false},
+      {t:'A empresa define e documenta seu cliente ideal (ICP) para direcionar a prospecção?',spin:'S',obs:true},
+      {t:'A falta de prospecção ativa gera meses de baixo faturamento e imprevisibilidade de receita?',spin:'P',obs:false},
+      {t:'A dependência de indicações espontâneas impede o crescimento previsível do negócio?',spin:'I',obs:false},
+      {t:'Com um processo de prospecção estruturado, a empresa teria previsão real de receita mensal?',spin:'N',obs:true},
     ]
   },
   {
-    id: 'vendas',
-    nome: 'Vendas & Marketing',
-    icone: '📢',
-    desc: 'Avalia a estratégia comercial, presença digital, processos de venda e captação de clientes.',
-    perguntas: [
-      { texto: 'A empresa possui um processo de vendas definido (funil, abordagem, follow-up)?', obs: true },
-      { texto: 'Existe uma presença digital ativa e consistente (redes sociais, Google Meu Negócio, site)?', obs: false },
-      { texto: 'A empresa conhece seu perfil de cliente ideal (ICP) e sabe onde encontrá-lo?', obs: true },
-      { texto: 'As metas de vendas são definidas, monitoradas e comunicadas para a equipe?', obs: false },
-      { texto: 'Existe estratégia de fidelização ou recompra para os clientes atuais?', obs: true },
+    id:'abordagem', nome:'Abordagem', icone:'📞',
+    desc:'Avalia a qualidade do primeiro contato com prospects. Informe os dados desta etapa do seu funil.',
+    numBloco:{
+      titulo:'📊 Números da Abordagem',
+      campos:[
+        {id:'n_contatos_mes', label:'Contatos Realizados/Mês', placeholder:'Ex: 80', hint:'Ligações, mensagens, visitas'},
+        {id:'n_respostas_mes', label:'Respostas Recebidas/Mês', placeholder:'Ex: 24', hint:'Prospects que retornaram contato'},
+        {id:'n_agendamentos_mes', label:'Agendamentos/Mês', placeholder:'Ex: 15', hint:'Reuniões, demos agendadas'},
+      ],
+      cols:3,
+      calc:(vals)=>{
+        const taxa = vals.n_contatos_mes>0?Math.round((vals.n_respostas_mes/vals.n_contatos_mes)*100):0;
+        const conv = vals.n_respostas_mes>0?Math.round((vals.n_agendamentos_mes/vals.n_respostas_mes)*100):0;
+        return taxa>0?[{v:`${taxa}%`,l:'Taxa de resposta',bench:taxa>=30?'bench-ok':'bench-bad',bref:'ref: >30%'},{v:`${conv}%`,l:'Conversão p/ agendamento',bench:conv>=50?'bench-ok':'bench-warn',bref:'ref: >50%'}]:[];
+      }
+    },
+    perguntas:[
+      {t:'Existe roteiro/script estruturado para o primeiro contato comercial?',spin:'S',obs:false},
+      {t:'A abordagem comunica valor antes de mencionar produto, preço ou condições?',spin:'P',obs:false},
+      {t:'Prospects que não respondem são perdidos por falta de follow-up estruturado?',spin:'P',obs:true},
+      {t:'Os canais (WhatsApp, telefone, email, LinkedIn) são usados de forma integrada e estratégica?',spin:'S',obs:false},
+      {t:'A falta de método na abordagem faz a empresa depender de clientes que aparecem por acaso?',spin:'I',obs:true},
+      {t:'Com roteiro e follow-up definidos, a taxa de agendamentos aumentaria significativamente?',spin:'N',obs:false},
     ]
   },
   {
-    id: 'operacoes',
-    nome: 'Operações & Processos',
-    icone: '⚙️',
-    desc: 'Avalia a eficiência operacional, padronização de processos, qualidade e uso de ferramentas.',
-    perguntas: [
-      { texto: 'Os processos operacionais principais estão documentados ou padronizados (POPs)?', obs: true },
-      { texto: 'A empresa utiliza ferramentas ou sistemas para gestão (ERP, planilhas estruturadas, CRM)?', obs: false },
-      { texto: 'Existe controle de estoque ou indicadores de produtividade operacional?', obs: true },
-      { texto: 'Os erros e retrabalhos são rastreados e há esforço para reduzi-los?', obs: false },
-      { texto: 'A entrega do produto/serviço ao cliente tem qualidade consistente e prazo cumprido?', obs: true },
+    id:'qualificacao', nome:'Qualificação', icone:'🔎',
+    desc:'Avalia como a empresa filtra oportunidades reais. Informe os dados desta etapa.',
+    numBloco:{
+      titulo:'📊 Números da Qualificação',
+      campos:[
+        {id:'n_reunioes_mes', label:'Reuniões Realizadas/Mês', placeholder:'Ex: 15', hint:'Reuniões de descoberta/qualificação'},
+        {id:'n_qualificados_mes', label:'Qualificados (seguem p/ proposta)', placeholder:'Ex: 8', hint:'Que passaram para a próxima etapa'},
+        {id:'n_ciclo_qual', label:'Tempo médio de qualificação (dias)', placeholder:'Ex: 3', hint:'Do 1º contato à decisão de avançar'},
+      ],
+      cols:3,
+      calc:(vals)=>{
+        const taxa = vals.n_reunioes_mes>0?Math.round((vals.n_qualificados_mes/vals.n_reunioes_mes)*100):0;
+        return taxa>0?[{v:`${taxa}%`,l:'Taxa de qualificação',bench:taxa>=50?'bench-ok':'bench-warn',bref:'ref: >50%'},{v:`${vals.n_ciclo_qual||'—'}d`,l:'Ciclo de qualificação'}]:[];
+      }
+    },
+    perguntas:[
+      {t:'A equipe usa algum método de qualificação (SPIN, BANT) para filtrar oportunidades reais?',spin:'S',obs:true},
+      {t:'Os vendedores investigam profundamente as dores e impactos antes de apresentar soluções?',spin:'P',obs:true},
+      {t:'O tempo dos vendedores é desperdiçado com prospects que nunca vão comprar?',spin:'P',obs:false},
+      {t:'Existe critério claro para desqualificar prospects e redirecionar energia para quem tem potencial?',spin:'S',obs:false},
+      {t:'A empresa entende o processo decisório do cliente (quem decide, quem influencia, qual o prazo)?',spin:'I',obs:true},
+      {t:'Com qualificação precisa, a equipe focaria apenas em quem tem potencial real — dobrando a conversão?',spin:'N',obs:false},
     ]
   },
   {
-    id: 'pessoas',
-    nome: 'Pessoas & Gestão',
-    icone: '👥',
-    desc: 'Avalia liderança, cultura organizacional, desenvolvimento de equipe e gestão de talentos.',
-    perguntas: [
-      { texto: 'Os colaboradores têm funções, metas e responsabilidades claramente definidas?', obs: true },
-      { texto: 'A empresa realiza reuniões de alinhamento ou feedback com a equipe regularmente?', obs: false },
-      { texto: 'Existe algum programa de capacitação, treinamento ou desenvolvimento para a equipe?', obs: true },
-      { texto: 'O clima organizacional é positivo e a empresa tem baixo índice de rotatividade?', obs: false },
-      { texto: 'O empresário consegue se ausentar por alguns dias sem comprometer a operação?', obs: true },
+    id:'proposta', nome:'Proposta & Negociação', icone:'📄',
+    desc:'Avalia a qualidade das propostas e capacidade de negociar valor. Informe os dados desta etapa.',
+    numBloco:{
+      titulo:'📊 Números de Proposta & Negociação',
+      campos:[
+        {id:'n_propostas_mes', label:'Propostas Enviadas/Mês', placeholder:'Ex: 8', hint:'Total de propostas comerciais enviadas'},
+        {id:'n_propostas_aceitas', label:'Propostas Aceitas/Mês', placeholder:'Ex: 3', hint:'Que resultaram em venda'},
+        {id:'n_desconto_medio', label:'Desconto Médio Concedido (%)', placeholder:'Ex: 12', hint:'% médio de desconto para fechar'},
+      ],
+      cols:3,
+      calc:(vals)=>{
+        const taxa = vals.n_propostas_mes>0?Math.round((vals.n_propostas_aceitas/vals.n_propostas_mes)*100):0;
+        const desc = vals.n_desconto_medio||0;
+        return taxa>0?[{v:`${taxa}%`,l:'Taxa de aceite de propostas',bench:taxa>=30?'bench-ok':taxa>=15?'bench-warn':'bench-bad',bref:'ref: >30%'},{v:`${desc}%`,l:'Desconto médio concedido',bench:desc<=5?'bench-ok':desc<=15?'bench-warn':'bench-bad',bref:'ref: <10%'}]:[];
+      }
+    },
+    perguntas:[
+      {t:'As propostas são personalizadas, conectando a solução às dores levantadas na qualificação?',spin:'N',obs:true},
+      {t:'A empresa consegue defender seu preço sem entrar em guerra de descontos?',spin:'P',obs:true},
+      {t:'O tempo de resposta após a proposta é longo, e muitos prospects somem sem dar retorno?',spin:'P',obs:false},
+      {t:'As propostas incluem ancoragem de valor (ROI estimado, custo da inação, economia gerada)?',spin:'I',obs:true},
+      {t:'A empresa usa gatilhos de urgência e escassez legítimos para acelerar a decisão do cliente?',spin:'N',obs:false},
     ]
-  }
+  },
+  {
+    id:'fechamento', nome:'Fechamento & Pós-venda', icone:'🤝',
+    desc:'Avalia o fechamento e a estratégia de crescimento com clientes ativos. Informe os dados finais.',
+    numBloco:{
+      titulo:'📊 Números de Fechamento & Pós-venda',
+      campos:[
+        {id:'n_churn_mes', label:'Clientes Perdidos/Mês (Churn)', placeholder:'Ex: 3', hint:'Clientes que cancelaram ou pararam de comprar'},
+        {id:'n_upsell_mes', label:'Upsells / Cross-sells por Mês', placeholder:'Ex: 2', hint:'Vendas adicionais para clientes atuais'},
+        {id:'n_indicacoes_clientes', label:'Indicações de Clientes/Mês', placeholder:'Ex: 4', hint:'Clientes que indicaram ativamente novos clientes'},
+      ],
+      cols:3,
+      calc:(vals, funil)=>{
+        const base = funil.base||0;
+        const churnPct = base>0?Math.round(((vals.n_churn_mes||0)/base)*100):0;
+        return base>0?[{v:`${churnPct}%`,l:'Taxa de Churn mensal',bench:churnPct<=2?'bench-ok':churnPct<=5?'bench-warn':'bench-bad',bref:'ref: <2%'},{v:`${vals.n_upsell_mes||0}`,l:'Upsells/mês'},{v:`${vals.n_indicacoes_clientes||0}`,l:'Indicações/mês'}]:[];
+      }
+    },
+    perguntas:[
+      {t:'Os vendedores pedem o fechamento de forma direta e sem constrangimento no momento certo?',spin:'P',obs:false},
+      {t:'Existe processo estruturado de onboarding para garantir sucesso do cliente logo após a compra?',spin:'S',obs:true},
+      {t:'A base de clientes ativos é explorada com upsell, cross-sell e recompra ativos?',spin:'I',obs:true},
+      {t:'Clientes satisfeitos são ativamente estimulados a indicar novos clientes (programa estruturado)?',spin:'N',obs:false},
+      {t:'A perda de clientes por falta de relacionamento pós-venda representa receita significativa não recuperada?',spin:'P',obs:true},
+    ]
+  },
 ];
 
-const NIVEL_COR = [
-  { min: 0,  max: 39, label: 'Nível Crítico',   cls: 'nivel-critico',  cor: '#ff4444' },
-  { min: 40, max: 54, label: 'Em Alerta',        cls: 'nivel-alerta',   cor: '#ff9800' },
-  { min: 55, max: 69, label: 'Moderado',         cls: 'nivel-moderado', cor: '#2196F3' },
-  { min: 70, max: 84, label: 'Bom',              cls: 'nivel-bom',      cor: '#4CAF50' },
-  { min: 85, max: 100,label: 'Excelente',        cls: 'nivel-excelente',cor: '#8BC34A' },
+const SL={S:'Situação',P:'Problema',I:'Implicação',N:'Necessidade'};
+const NV=[
+  {min:0,max:39,label:'Crítico',cls:'nc',cor:'#e53935'},
+  {min:40,max:54,label:'Em Alerta',cls:'na',cor:'#f9a825'},
+  {min:55,max:69,label:'Moderado',cls:'nm',cor:'#2196F3'},
+  {min:70,max:84,label:'Bom',cls:'ngb',cor:'#4CAF50'},
+  {min:85,max:100,label:'Excelente',cls:'ne',cor:'#8BC34A'},
 ];
+const gN=s=>NV.find(n=>s>=n.min&&s<=n.max)||NV[0];
+const fmtR=v=>'R$ '+Math.round(v).toLocaleString('pt-BR');
 
-function getNivel(score) {
-  return NIVEL_COR.find(n => score >= n.min && score <= n.max) || NIVEL_COR[0];
+let E={cl:{},fu:{},nd:{},ea:0,rs:{},ob:{}};
+
+function calcPrev(){
+  const l=parseFloat(document.getElementById('fld').value)||0;
+  const c=parseFloat(document.getElementById('fco').value)||0;
+  const t=parseFloat(document.getElementById('ftk').value)||0;
+  if(!l||!c||!t){document.getElementById('fpv').style.display='none';return;}
+  const v=Math.round(l*(c/100)),r=v*t;
+  document.getElementById('fpv').style.display='block';
+  document.getElementById('fpvd').textContent=v;
+  document.getElementById('fptk').textContent=fmtR(t);
+  document.getElementById('fprec').textContent=fmtR(r);
 }
 
-// Estado
-let estado = {
-  cliente: {},
-  areaAtual: 0,
-  respostas: {},   // {areaId: {pIdx: valor}}
-  obs: {}
-};
-
-// ===== NAVEGAÇÃO =====
-function irParaCliente() {
-  document.getElementById('tela-inicio').style.display = 'none';
-  document.getElementById('tela-cliente').style.display = 'block';
-  window.scrollTo(0,0);
-}
-function irParaInicio() {
-  document.getElementById('tela-cliente').style.display = 'none';
-  document.getElementById('tela-inicio').style.display = 'flex';
-}
-function iniciarDiagnostico() {
-  const nome = document.getElementById('nome-cliente').value.trim();
-  const empresa = document.getElementById('nome-empresa').value.trim();
-  if (!nome || !empresa) { alert('Por favor, preencha ao menos o nome e a empresa.'); return; }
-  estado.cliente = {
-    nome, empresa,
-    segmento: document.getElementById('segmento').value,
-    funcionarios: document.getElementById('funcionarios').value,
-    faturamento: document.getElementById('faturamento').value,
-    tempoMercado: document.getElementById('tempo-mercado').value,
-    consultor: document.getElementById('nome-consultor').value,
-    data: new Date().toLocaleDateString('pt-BR')
-  };
-  estado.areaAtual = 0;
-  estado.respostas = {};
-  estado.obs = {};
-  document.getElementById('tela-cliente').style.display = 'none';
-  document.getElementById('tela-diagnostico').style.display = 'block';
-  document.getElementById('diag-nome-empresa').textContent = empresa;
-  document.getElementById('diag-info-extra').textContent = (estado.cliente.consultor ? 'Consultor: ' + estado.cliente.consultor + ' • ' : '') + estado.cliente.data;
-  renderizarTabs();
-  renderizarArea();
+function show(h,s){
+  const he=document.getElementById(h),se=document.getElementById(s);
+  he.classList.remove('A');he.style.display='none';
+  se.style.display='block';se.classList.add('A');
   window.scrollTo(0,0);
 }
 
-function renderizarTabs() {
-  const container = document.getElementById('area-tabs');
-  container.innerHTML = AREAS.map((a, i) => {
-    const completada = temRespostasCompletas(i);
-    const ativa = i === estado.areaAtual;
-    let cls = 'area-tab';
-    if (ativa) cls += ' active';
-    else if (completada) cls += ' completed';
-    return `<div class="${cls}" onclick="irParaArea(${i})">
-      ${a.icone} ${a.nome}
-      <span class="check">✓</span>
-    </div>`;
+function iniciar(){
+  const req=['fn','fe','fem','ftel','ftk','fco','fld'];
+  let ok=true;
+  req.forEach(id=>{const el=document.getElementById(id);if(!el.value.trim()){el.classList.add('er');ok=false;}else el.classList.remove('er');});
+  if(!ok){alert('Preencha todos os campos obrigatórios (*)');return;}
+  E.cl={nome:document.getElementById('fn').value.trim(),empresa:document.getElementById('fe').value.trim(),email:document.getElementById('fem').value.trim(),tel:document.getElementById('ftel').value.trim(),seg:document.getElementById('fseg').value,vend:document.getElementById('fv').value,consultor:document.getElementById('fc').value.trim(),data:new Date().toLocaleDateString('pt-BR')};
+  E.fu={ticket:parseFloat(document.getElementById('ftk').value)||0,conv:parseFloat(document.getElementById('fco').value)||0,leads:parseFloat(document.getElementById('fld').value)||0,base:parseFloat(document.getElementById('fba').value)||0,ltv:parseFloat(document.getElementById('fltv').value)||0,ciclo:parseFloat(document.getElementById('fci').value)||0};
+  E.ea=0;E.rs={};E.ob={};E.nd={};
+  document.getElementById('t1').style.display='none';
+  document.getElementById('de').textContent=E.cl.empresa;
+  document.getElementById('ds').textContent=(E.cl.consultor?'Consultor: '+E.cl.consultor+' • ':'')+E.cl.data;
+  document.getElementById('t2').style.display='block';
+  renderNav();renderEt();window.scrollTo(0,0);
+}
+
+function renderNav(){
+  document.getElementById('enav').innerHTML=ETAPAS.map((e,i)=>{
+    const ok=temR(i),at=i===E.ea;
+    return `<div class="enb${at?' A':ok&&!at?' OK':''}" onclick="irE(${i})">${e.icone} ${e.nome}${ok&&!at?' ✓':''}</div>`;
   }).join('');
 }
+function temR(i){const r=E.rs[ETAPAS[i].id]||{};return ETAPAS[i].perguntas.every((_,j)=>r[j]!==undefined);}
+function irE(i){E.ea=i;renderNav();renderEt();}
 
-function temRespostasCompletas(idx) {
-  const area = AREAS[idx];
-  const resp = estado.respostas[area.id] || {};
-  return area.perguntas.every((_, i) => resp[i] !== undefined);
+function getNumVals(etapaId){
+  const vals={};
+  const et=ETAPAS.find(e=>e.id===etapaId);
+  if(!et||!et.numBloco)return vals;
+  et.numBloco.campos.forEach(c=>{
+    const el=document.getElementById(c.id);
+    if(el)vals[c.id]=parseFloat(el.value)||0;
+  });
+  return vals;
 }
 
-function irParaArea(idx) {
-  estado.areaAtual = idx;
-  renderizarTabs();
-  renderizarArea();
+function renderEt(){
+  const et=ETAPAS[E.ea];
+  const pct=Math.round((E.ea/ETAPAS.length)*100);
+  document.getElementById('pt').textContent=`Etapa ${E.ea+1} de ${ETAPAS.length}`;
+  document.getElementById('pp').textContent=pct+'%';
+  document.getElementById('pf').style.width=pct+'%';
+  document.getElementById('etit').innerHTML=`<div class="eic">${et.icone}</div>${et.nome}`;
+  document.getElementById('edesc').textContent=et.desc;
+
+  const r=E.rs[et.id]||{},o=E.ob[et.id]||{};
+  const nd=E.nd[et.id]||{};
+
+  // Bloco numérico
+  const nb=et.numBloco;
+  const nbHTML=`<div class="nbloco">
+    <div class="nb-tit">📊 ${nb.titulo}</div>
+    <div class="nb-row c${nb.cols}">${nb.campos.map(c=>`
+      <div class="nb-item">
+        <label>${c.label}</label>
+        <input type="number" id="${c.id}" placeholder="${c.placeholder}" value="${nd[c.id]||''}" oninput="atualizarCalc('${et.id}')">
+        <div class="nhint">${c.hint}</div>
+      </div>`).join('')}
+    </div>
+    <div class="nb-calc" id="nbcalc-${et.id}"></div>
+  </div>`;
+
+  // Perguntas qualitativas
+  const pergsHTML=et.perguntas.map((p,i)=>{
+    const v=r[i];
+    const btns=[1,2,3,4,5].map(n=>`<button class="eb${v===n?' S':''}" onclick="resp('${et.id}',${i},${n})">${n}</button>`).join('');
+    return `<div class="pi" id="pi-${et.id}-${i}">
+      <div class="ptxt"><span class="pn">${i+1}</span>${p.t}<span class="st s${p.spin}">${SL[p.spin]}</span></div>
+      <div class="ew">${btns}</div>
+      <div class="el"><span>Inexistente</span><span>Em desenvolvimento</span><span>Plenamente implantado</span></div>
+      ${p.obs?`<span class="ol">Observação do consultor</span><textarea class="oi" placeholder="Anote contexto relevante..." onchange="sObs('${et.id}',${i},this.value)">${o[i]||''}</textarea>`:''}
+    </div>`;
+  }).join('');
+
+  document.getElementById('pergs').innerHTML=nbHTML+pergsHTML;
+
+  // Restaurar valores numéricos
+  nb.campos.forEach(c=>{
+    const el=document.getElementById(c.id);
+    if(el&&nd[c.id])el.value=nd[c.id];
+  });
+  atualizarCalc(et.id);
+
+  document.getElementById('bant').style.visibility=E.ea===0?'hidden':'visible';
+  const bp=document.getElementById('bprx');
+  if(E.ea===ETAPAS.length-1){bp.innerHTML='🏁 Ver Resultado';bp.onclick=verR;}
+  else{bp.innerHTML='Próxima →';bp.onclick=etP;}
 }
 
-function renderizarArea() {
-  const area = AREAS[estado.areaAtual];
-  const pct = Math.round(((estado.areaAtual) / AREAS.length) * 100);
-  document.getElementById('prog-texto').textContent = `Área ${estado.areaAtual+1} de ${AREAS.length}`;
-  document.getElementById('prog-pct').textContent = pct + '%';
-  document.getElementById('progress-fill').style.width = pct + '%';
+function atualizarCalc(etapaId){
+  const et=ETAPAS.find(e=>e.id===etapaId);
+  if(!et)return;
+  const vals=getNumVals(etapaId);
+  // Salva nd
+  if(!E.nd[etapaId])E.nd[etapaId]={};
+  Object.assign(E.nd[etapaId],vals);
+  const calcEl=document.getElementById(`nbcalc-${etapaId}`);
+  if(!calcEl)return;
+  const items=et.numBloco.calc(vals,E.fu);
+  if(!items||items.length===0){calcEl.innerHTML='';return;}
+  calcEl.innerHTML=items.map(it=>`<div class="nb-calc-item"><div class="ncv">${it.v}</div><div class="ncl">${it.l}${it.bref?` <span class="${it.bench||''}" style="font-size:10px;">(${it.bref})</span>`:''}</div></div>`).join('');
+}
 
-  document.getElementById('area-titulo').innerHTML = `<div class="icone">${area.icone}</div>${area.nome}`;
-  document.getElementById('area-desc').textContent = area.desc;
+function resp(id,i,v){
+  if(!E.rs[id])E.rs[id]={};E.rs[id][i]=v;
+  document.getElementById(`pi-${id}-${i}`).querySelectorAll('.eb').forEach((b,j)=>b.classList.toggle('S',j+1===v));
+  renderNav();
+}
+function sObs(id,i,v){if(!E.ob[id])E.ob[id]={};E.ob[id][i]=v;}
+function etP(){
+  // Salva dados numéricos antes de avançar
+  const et=ETAPAS[E.ea];
+  const vals=getNumVals(et.id);
+  if(!E.nd[et.id])E.nd[et.id]={};
+  Object.assign(E.nd[et.id],vals);
+  if(E.ea<ETAPAS.length-1){E.ea++;renderNav();renderEt();window.scrollTo(0,0);}
+}
+function etA(){
+  if(E.ea>0){E.ea--;renderNav();renderEt();window.scrollTo(0,0);}
+}
 
-  const resp = estado.respostas[area.id] || {};
-  const obsMap = estado.obs[area.id] || {};
+function calcSc(){
+  return ETAPAS.map(e=>{
+    const r=E.rs[e.id]||{};
+    const soma=Object.values(r).reduce((a,b)=>a+b,0);
+    const score=Math.round((soma/(e.perguntas.length*5))*100);
+    return{etapa:e,score};
+  });
+}
 
-  const lista = document.getElementById('perguntas-lista');
-  lista.innerHTML = area.perguntas.map((p, i) => {
-    const val = resp[i];
-    const obsVal = obsMap[i] || '';
-    const btns = [1,2,3,4,5].map(n => `
-      <button class="escala-btn ${val===n?'selected':''}" onclick="responder('${area.id}',${i},${n})">${n}</button>
-    `).join('');
-    return `
-      <div class="pergunta-item" id="perg-${area.id}-${i}">
-        <div class="pergunta-texto"><span class="pergunta-numero">${i+1}</span>${p.texto}</div>
-        <div class="escala-wrap">${btns}</div>
-        <div class="escala-labels"><span>Inexistente</span><span>Em desenvolvimento</span><span>Totalmente implantado</span></div>
-        ${p.obs ? `<span class="obs-label">Observações do consultor (opcional)</span>
-        <textarea class="obs-input" id="obs-${area.id}-${i}" placeholder="Anote pontos relevantes..."
-          onchange="salvarObs('${area.id}',${i},this.value)">${obsVal}</textarea>` : ''}
+let gR,gB;
+function verR(){
+  // Salva dados numéricos da última etapa
+  const et=ETAPAS[E.ea];
+  const vals=getNumVals(et.id);
+  if(!E.nd[et.id])E.nd[et.id]={};
+  Object.assign(E.nd[et.id],vals);
+
+  document.getElementById('t2').style.display='none';
+  document.getElementById('t3').style.display='block';
+  window.scrollTo(0,0);
+
+  const sc=calcSc();
+  const med=Math.round(sc.reduce((a,s)=>a+s.score,0)/sc.length);
+  const niv=gN(med);
+  const F=E.fu;
+  const ND=E.nd;
+
+  // Hero
+  document.getElementById('re').textContent=E.cl.empresa;
+  document.getElementById('rsc').textContent=med;
+  const rb=document.getElementById('rbadge');rb.textContent=niv.label;rb.className='nbadge '+niv.cls;
+  document.getElementById('retapas').innerHTML=sc.map(s=>{const n=gN(s.score);return `<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:14px;border-top:3px solid ${n.cor}"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);margin-bottom:5px;">${s.etapa.icone} ${s.etapa.nome}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:${n.cor};line-height:1;">${s.score}<span style="font-size:14px;color:rgba(255,255,255,.3)">/100</span></div><div style="font-size:11px;font-weight:600;color:${n.cor};margin-top:3px;">${n.label}</div></div>`;}).join('');
+
+  // Funil calculado com dados reais coletados
+  const vAt=Math.round(F.leads*(F.conv/100));
+  const rAt=vAt*F.ticket;
+  const propostasReais=ND.proposta&&ND.proposta.n_propostas_mes||Math.round(F.leads*0.35);
+  const agendReais=ND.abordagem&&ND.abordagem.n_agendamentos_mes||Math.round(F.leads*0.25);
+  const qualifReais=ND.qualificacao&&ND.qualificacao.n_qualificados_mes||Math.round(agendReais*0.6);
+
+  const passos=[
+    {l:'Leads Gerados',v:F.leads,u:'/mês',p:100,drop:'',c:'#df5f2e'},
+    {l:'Abordados / Agendados',v:agendReais,u:'/mês',p:Math.round((agendReais/Math.max(F.leads,1))*100),drop:`${Math.round((agendReais/Math.max(F.leads,1))*100)}% dos leads`,c:'#e8773a'},
+    {l:'Qualificados',v:qualifReais,u:'/mês',p:Math.round((qualifReais/Math.max(F.leads,1))*100),drop:`${Math.round((qualifReais/Math.max(F.leads,1))*100)}% dos leads`,c:'#f09050'},
+    {l:'Propostas Enviadas',v:propostasReais,u:'/mês',p:Math.round((propostasReais/Math.max(F.leads,1))*100),drop:`${Math.round((propostasReais/Math.max(F.leads,1))*100)}% dos leads`,c:'#f0b060'},
+    {l:'Vendas Fechadas',v:vAt,u:'/mês',p:F.conv,drop:`${F.conv}% conversão`,c:'#4CAF50'},
+    {l:'Receita Mensal',v:fmtR(rAt),u:'',p:Math.max(F.conv,10),drop:fmtR(F.ticket)+'/venda',c:'#2e7d32'},
+  ];
+  document.getElementById('fsteps').innerHTML=passos.map(s=>`<div class="fstep"><div class="fslbl">${s.l}</div><div class="fsbw"><div class="fsbar" style="width:${s.p}%;background:${s.c}">${s.drop}</div></div><div class="fsval">${s.v}${s.u}</div></div>`).join('');
+
+  // Impacto financeiro
+  const cvRef=35;
+  const perdM=Math.max(0,Math.round(F.leads*((cvRef-F.conv)/100)*F.ticket));
+  const perdA=perdM*12;
+  const descMedio=ND.proposta&&ND.proposta.n_desconto_medio||0;
+  const perdaDesc=descMedio>0?Math.round(vAt*F.ticket*(descMedio/100)):0;
+  const perdaChurn=ND.fechamento&&ND.fechamento.n_churn_mes?Math.round(ND.fechamento.n_churn_mes*(F.ltv||F.ticket*3)):0;
+
+  document.getElementById('igrid').innerHTML=`
+    <div class="ii"><div class="iv vr">${fmtR(perdM)}</div><div class="ib">Perda mensal por baixa conversão</div><div class="is">vs benchmark mercado (${cvRef}%)</div></div>
+    <div class="ii"><div class="iv vr">${fmtR(perdA)}</div><div class="ib">Perda anual acumulada</div><div class="is">receita que fica na mesa por ano</div></div>
+    ${descMedio>0?`<div class="ii"><div class="iv vo">${fmtR(perdaDesc)}</div><div class="ib">Perdido em descontos/mês</div><div class="is">${descMedio}% de desconto médio concedido</div></div>`:''}
+    ${perdaChurn>0?`<div class="ii"><div class="iv vr">${fmtR(perdaChurn)}</div><div class="ib">Perda por churn mensal</div><div class="is">${ND.fechamento.n_churn_mes} clientes perdidos × LTV</div></div>`:''}
+    <div class="ii"><div class="iv vg">${fmtR(rAt)}</div><div class="ib">Receita mensal atual</div><div class="is">${vAt} vendas × ${fmtR(F.ticket)}</div></div>`;
+
+  // LTV
+  const ltvVal=F.ltv||F.ticket*3;
+  const ltvBase=ltvVal*(F.base||0);
+  const ltvPotencial=ltvVal*(vAt*12);
+  const upsells=ND.fechamento&&ND.fechamento.n_upsell_mes||0;
+  document.getElementById('ltvgrid').innerHTML=`
+    <div class="ltv-item"><div class="lv">${fmtR(ltvVal)}</div><div class="lb">LTV por cliente</div><div class="ls">receita total média por cliente</div></div>
+    ${F.base>0?`<div class="ltv-item"><div class="lv">${fmtR(ltvBase)}</div><div class="lb">Valor da base atual</div><div class="ls">${F.base} clientes × LTV</div></div>`:''}
+    <div class="ltv-item"><div class="lv">${fmtR(ltvPotencial)}</div><div class="lb">Potencial anual de novos clientes</div><div class="ls">${vAt} novas vendas/mês × LTV</div></div>
+    ${upsells>0?`<div class="ltv-item"><div class="lv">${upsells}</div><div class="lb">Upsells/mês realizados</div><div class="ls">receita adicional da base ativa</div></div>`:''}`;
+
+  // Simulação
+  const sims=[{pct:'+10pp',delta:10,d:false},{pct:'+20pp',delta:20,d:true},{pct:'+35pp',delta:35,d:false}];
+  document.getElementById('sgrid').innerHTML=sims.map(s=>{const nv=Math.round(F.leads*((F.conv+s.delta)/100));const nr=nv*F.ticket;const g=nr-rAt;return `<div class="sitem${s.d?' D':''}"><div class="sp">Conversão ${s.pct}</div><div class="sv">+${fmtR(g)}</div><div class="sd2">ganho mensal adicional<br>${nv} vendas/mês vs ${vAt} atuais<br>LTV adicional: ${fmtR((nv-vAt)*ltvVal)}/ano</div></div>`;}).join('');
+
+  // Dados numéricos por etapa no resultado
+  const edataHTML=ETAPAS.map(et=>{
+    const nd=E.nd[et.id]||{};
+    const campos=et.numBloco.campos.filter(c=>nd[c.id]&&nd[c.id]>0);
+    if(campos.length===0)return'';
+    const calcItems=et.numBloco.calc(nd,F);
+    return `<div class="edata-card fu">
+      <h4>${et.icone} Dados Coletados: ${et.nome}</h4>
+      <div class="edata-grid">
+        ${campos.map(c=>`<div class="edata-item"><div class="dv">${nd[c.id]}</div><div class="dl">${c.label}</div></div>`).join('')}
+        ${calcItems.map(ci=>`<div class="edata-item"><div class="dv" style="color:${ci.bench==='bench-ok'?'#2e7d32':ci.bench==='bench-bad'?'#e53935':'#f9a825'}">${ci.v}</div><div class="dl">${ci.l}</div>${ci.bref?`<div class="dbench ${ci.bench||''}">${ci.bref}</div>`:''}</div>`).join('')}
       </div>
-    `;
-  }).join('');
-
-  // Botão anterior
-  const btnAnt = document.getElementById('btn-anterior');
-  btnAnt.style.visibility = estado.areaAtual === 0 ? 'hidden' : 'visible';
-
-  // Botão próximo
-  const btnProx = document.getElementById('btn-proximo');
-  if (estado.areaAtual === AREAS.length - 1) {
-    btnProx.textContent = '🏁 Ver Resultado';
-    btnProx.onclick = verResultado;
-  } else {
-    btnProx.innerHTML = 'Próxima Área →';
-    btnProx.onclick = areaProxima;
-  }
-}
-
-function responder(areaId, pIdx, valor) {
-  if (!estado.respostas[areaId]) estado.respostas[areaId] = {};
-  estado.respostas[areaId][pIdx] = valor;
-  // Atualiza botões visualmente
-  const area = AREAS.find(a => a.id === areaId);
-  const pergDiv = document.getElementById(`perg-${areaId}-${pIdx}`);
-  pergDiv.querySelectorAll('.escala-btn').forEach((btn, i) => {
-    btn.classList.toggle('selected', i+1 === valor);
-  });
-  renderizarTabs();
-}
-
-function salvarObs(areaId, pIdx, valor) {
-  if (!estado.obs[areaId]) estado.obs[areaId] = {};
-  estado.obs[areaId][pIdx] = valor;
-}
-
-function areaProxima() {
-  if (estado.areaAtual < AREAS.length - 1) {
-    estado.areaAtual++;
-    renderizarTabs();
-    renderizarArea();
-    window.scrollTo(0,0);
-  }
-}
-function areaAnterior() {
-  if (estado.areaAtual > 0) {
-    estado.areaAtual--;
-    renderizarTabs();
-    renderizarArea();
-    window.scrollTo(0,0);
-  }
-}
-
-// ===== RESULTADO =====
-function calcularScores() {
-  return AREAS.map(area => {
-    const resp = estado.respostas[area.id] || {};
-    const total = area.perguntas.length;
-    const soma = Object.values(resp).reduce((a, b) => a + b, 0);
-    const maxPossivel = total * 5;
-    const score = total > 0 ? Math.round((soma / maxPossivel) * 100) : 0;
-    const respondidas = Object.keys(resp).length;
-    return { area, score, soma, total, respondidas };
-  });
-}
-
-let chartRadar, chartBarras, chartLinha;
-
-function verResultado() {
-  document.getElementById('tela-diagnostico').style.display = 'none';
-  document.getElementById('tela-resultado').style.display = 'block';
-  window.scrollTo(0,0);
-
-  const scores = calcularScores();
-  const media = Math.round(scores.reduce((a, s) => a + s.score, 0) / scores.length);
-  const nivel = getNivel(media);
-
-  document.getElementById('res-empresa-nome').textContent = estado.cliente.empresa;
-  document.getElementById('score-total').textContent = media;
-  const badge = document.getElementById('maturidade-badge');
-  badge.textContent = nivel.label;
-  badge.className = 'maturidade-badge ' + nivel.cls;
-
-  // Cards por área
-  const cardsContainer = document.getElementById('cards-scores');
-  cardsContainer.innerHTML = scores.map(s => {
-    const n = getNivel(s.score);
-    return `<div class="score-card" style="border-left-color:${n.cor}">
-      <div class="area-nome">${s.area.icone} ${s.area.nome}</div>
-      <div class="area-pontos" style="color:${n.cor}">${s.score}<span style="font-size:18px;color:var(--cinza-medio)">/100</span></div>
-      <div class="barra"><div class="barra-fill" style="width:${s.score}%;background:${n.cor}"></div></div>
-      <div class="nivel-texto" style="color:${n.cor}">${n.label}</div>
     </div>`;
   }).join('');
+  document.getElementById('edata-section').innerHTML=edataHTML;
 
-  // Envia email automaticamente
-  setTimeout(() => enviarEmail(scores, media, nivel), 500);
+  // Gargalos
+  const gMsg={
+    prospeccao:s=>s<40?'Prospecção inexistente. Sem fluxo ativo, a receita depende de sorte — imprevisível e arriscado.':s<70?'Prospecção inconsistente. Há esforço mas sem método, meta e responsável definidos.':'Prospecção estruturada. Oportunidade de escalar com automação e novos canais.',
+    abordagem:s=>s<40?'Abordagem sem roteiro e sem follow-up. Oportunidades são perdidas logo no primeiro contato.':s<70?'Abordagem existe mas taxa de resposta abaixo do potencial. Follow-up precisa de estrutura.':'Boa abordagem. Personalização e automação de follow-up elevariam ainda mais a conversão.',
+    qualificacao:s=>s<40?'Sem qualificação definida, vendedores desperdiçam tempo com quem não vai comprar — desgaste sem resultado.':s<70?'Qualificação parcial. Há desperdício de energia com prospects de baixo potencial.':'Boa qualificação. Aprofundar investigação SPIN aumenta o ticket e acelera o ciclo.',
+    proposta:s=>s<40?'Propostas genéricas e vulneráveis a objeções de preço. Sem ancoragem de valor o cliente só vê custo.':s<70?'Proposta carece de personalização e gatilhos de urgência — muitos prospects somem sem resposta.':'Proposta estruturada. Ancoragem de ROI e gatilhos de urgência encurtam o ciclo de vendas.',
+    fechamento:s=>s<40?'Baixa taxa de fechamento e base de clientes completamente inexplorada — a maior fonte de receita está ignorada.':s<70?'Fechamento ocorre mas pós-venda e recompra são pontos cegos com enorme potencial não capturado.':'Bom fechamento. Programa de indicações ativas multiplica resultados sem custo adicional.',
+  };
+  document.getElementById('glist').innerHTML=sc.slice().sort((a,b)=>a.score-b.score).map(s=>{const n=gN(s.score);const dc=s.score<40?'gc':s.score<70?'ga':'gg';return `<div class="gi"><div class="gd ${dc}"></div><div class="gii"><h5>${s.etapa.icone} ${s.etapa.nome} — Score: ${s.score}/100</h5><p>${gMsg[s.etapa.id](s.score)}</p></div></div>`;}).join('');
+
+  // Benchmark
+  const taxaRespAbord=ND.abordagem&&ND.abordagem.n_contatos_mes>0?Math.round((ND.abordagem.n_respostas_mes/ND.abordagem.n_contatos_mes)*100):null;
+  const taxaAceite=ND.proposta&&ND.proposta.n_propostas_mes>0?Math.round((ND.proposta.n_propostas_aceitas/ND.proposta.n_propostas_mes)*100):null;
+  const churnPct=F.base>0&&ND.fechamento?Math.round((ND.fechamento.n_churn_mes/F.base)*100):null;
+  const bRows=[
+    {k:'Taxa de Conversão',cli:`${F.conv}%`,ref:'30–40%',ok:F.conv>=30?'bg':F.conv>=20?'bk':'bb'},
+    {k:'Score Comercial Geral',cli:`${med}/100`,ref:'70+/100',ok:med>=70?'bg':med>=50?'bk':'bb'},
+    taxaRespAbord!==null?{k:'Taxa de Resposta (Abordagem)',cli:`${taxaRespAbord}%`,ref:'>30%',ok:taxaRespAbord>=30?'bg':taxaRespAbord>=15?'bk':'bb'}:null,
+    taxaAceite!==null?{k:'Taxa de Aceite de Propostas',cli:`${taxaAceite}%`,ref:'>30%',ok:taxaAceite>=30?'bg':taxaAceite>=15?'bk':'bb'}:null,
+    descMedio>0?{k:'Desconto Médio Concedido',cli:`${descMedio}%`,ref:'<10%',ok:descMedio<=5?'bg':descMedio<=15?'bk':'bb'}:null,
+    churnPct!==null?{k:'Churn Mensal',cli:`${churnPct}%`,ref:'<2%',ok:churnPct<=2?'bg':churnPct<=5?'bk':'bb'}:null,
+    F.ltv>0?{k:'LTV por Cliente',cli:fmtR(F.ltv),ref:'Referência setorial',ok:null}:null,
+    F.ciclo>0?{k:'Ciclo de Vendas',cli:`${F.ciclo}d`,ref:F.ticket>5000?'15–30d':'3–10d',ok:null}:null,
+  ].filter(Boolean);
+  document.getElementById('btbl').innerHTML=`<thead><tr><th>Indicador</th><th>Sua Empresa</th><th>Referência</th><th>Status</th></tr></thead><tbody>${bRows.map(r=>`<tr><td>${r.k}</td><td class="cli${r.ok==='bb'?' bb':''}">${r.cli}</td><td class="br2">${r.ref}</td><td>${r.ok===null?'<span class="br2">—</span>':`<span class="${r.ok}">${r.ok==='bg'?'✓ Dentro':r.ok==='bk'?'△ Atenção':'✗ Abaixo'}</span>`}</td></tr>`).join('')}</tbody>`;
 
   // Gráficos
-  setTimeout(() => {    if (chartRadar) chartRadar.destroy();
-    if (chartBarras) chartBarras.destroy();
-    if (chartLinha) chartLinha.destroy();
+  setTimeout(()=>{
+    if(gR)gR.destroy();if(gB)gB.destroy();
+    const labs=sc.map(s=>s.etapa.nome),dat=sc.map(s=>s.score),cors=sc.map(s=>gN(s.score).cor);
+    gR=new Chart(document.getElementById('gr'),{type:'radar',data:{labels:labs,datasets:[{label:'Score',data:dat,backgroundColor:'rgba(223,95,46,.2)',borderColor:'#df5f2e',pointBackgroundColor:'#df5f2e',pointRadius:5,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:100,ticks:{stepSize:20,font:{size:10}},pointLabels:{font:{size:11,weight:'600'}}}},plugins:{legend:{display:false}}}});
+    gB=new Chart(document.getElementById('gb'),{type:'bar',data:{labels:labs,datasets:[{data:dat,backgroundColor:cors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:0,max:100,ticks:{stepSize:20}}},plugins:{legend:{display:false}}}});
+  },200);
 
-    const labels = scores.map(s => s.area.nome);
-    const data = scores.map(s => s.score);
-    const cores = scores.map(s => getNivel(s.score).cor);
+  // Ancoragem
+  const g20=Math.round(F.leads*((F.conv+20)/100)*F.ticket-rAt);
+  const vpp=Math.round(F.leads*0.01*F.ticket);
+  document.getElementById('atit').innerHTML=med<50?`Seu funil perde <em>${fmtR(perdM)}/mês</em> por gargalos que a Tutoreanos resolve em 60 dias.`:med<70?`Com os ajustes certos, você pode faturar <em>+${fmtR(g20)}/mês</em> sem contratar mais ninguém.`:`Sua base é sólida — a Tutoreanos pode <em>escalar seus resultados</em> ao próximo nível.`;
+  document.getElementById('adesc').textContent=`Com seus dados reais: ${F.leads} leads/mês, ticket de ${fmtR(F.ticket)}, conversão de ${F.conv}% e LTV de ${fmtR(ltvVal)} — cada 1 ponto percentual a mais na taxa de conversão vale ${fmtR(vpp)}/mês e ${fmtR(vpp*ltvVal/F.ticket)} em LTV adicional para o seu negócio.`;
+  document.getElementById('aitems').innerHTML=[{ic:'🗺️',t:'Reestruturação do Funil',d:'Cada etapa redesenhada com base nos dados e gargalos identificados neste diagnóstico.'},{ic:'🎯',t:'SPIN Selling Aplicado',d:'Treinamento prático: sua equipe aprende a investigar dores antes de apresentar soluções.'},{ic:'📊',t:'CRM e Indicadores',d:'Visibilidade total do funil, previsão de receita e decisões baseadas nos seus dados reais.'},{ic:'🔁',t:'Acompanhamento Semanal',d:'Consultores acompanham semana a semana até os resultados aparecerem e se consolidarem.'}].map(i=>`<div class="aitem"><div class="aic">${i.ic}</div><h5>${i.t}</h5><p>${i.d}</p></div>`).join('');
+  document.getElementById('roib').innerHTML=`<div class="rv">+${fmtR(g20)}/mês</div><p>Ganho estimado com <strong>apenas +20pp na taxa de conversão</strong> — meta alcançável nos primeiros 60 dias. Em LTV, isso representa <strong>${fmtR(g20*12)} adicionais no próximo ano</strong>. O investimento na Tutoreanos é recuperado no primeiro mês.</p>`;
 
-    // Radar
-    chartRadar = new Chart(document.getElementById('grafico-radar'), {
-      type: 'radar',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Score',
-          data,
-          backgroundColor: 'rgba(223,95,46,0.2)',
-          borderColor: '#df5f2e',
-          pointBackgroundColor: '#df5f2e',
-          pointRadius: 5,
-          borderWidth: 2,
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { r: { min: 0, max: 100, ticks: { stepSize: 20, font: { size: 10 } }, pointLabels: { font: { size: 11, weight: '600' } } } },
-        plugins: { legend: { display: false } }
-      }
-    });
+  // Custo inação
+  document.getElementById('ctit').textContent=`Cada mês sem agir é ${fmtR(perdM)} a menos no faturamento.`;
+  document.getElementById('cits').innerHTML=[
+    {ic:'📉',t:`Em <strong>1 mês</strong>: <strong>${fmtR(perdM)}</strong> de receita não capturada.`},
+    {ic:'📅',t:`Em <strong>3 meses</strong>: <strong>${fmtR(perdM*3)}</strong> — enquanto o concorrente estrutura o processo dele.`},
+    {ic:'📆',t:`Em <strong>12 meses</strong>: <strong>${fmtR(perdA)}</strong> deixados na mesa. Em LTV, o impacto é de <strong>${fmtR(perdA/F.ticket*ltvVal)}</strong>.`},
+    {ic:'⚡',t:`O investimento na Tutoreanos é <strong>recuperado no primeiro mês</strong> com o ganho de conversão estimado.`},
+  ].map(i=>`<div class="cit"><div class="ci">${i.ic}</div><p>${i.t}</p></div>`).join('');
 
-    // Barras
-    chartBarras = new Chart(document.getElementById('grafico-barras'), {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Score',
-          data,
-          backgroundColor: cores,
-          borderRadius: 6,
-          borderSkipped: false,
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { min: 0, max: 100, ticks: { stepSize: 20 } } },
-        plugins: { legend: { display: false } }
-      }
-    });
+  // Resumo executivo
+  const pior=sc.reduce((a,b)=>a.score<b.score?a:b);
+  document.getElementById('exec').innerHTML=`
+    <div class="es"><h5>Perfil do Cliente</h5>
+    <p><strong>${E.cl.empresa}</strong> | ${E.cl.seg||'—'} | ${E.cl.vend||'—'} | ${E.cl.data}</p>
+    <p>Funil atual: <strong>${F.leads} leads/mês</strong> → <strong>${vAt} vendas</strong> (${F.conv}% conversão) → <strong>${fmtR(rAt)}/mês</strong> | Ticket: ${fmtR(F.ticket)} | LTV: ${fmtR(ltvVal)}</p></div>
+    <div class="es"><h5>Diagnóstico por Etapa</h5><div class="etags">${sc.map(s=>`<span class="etag ${s.score<40?'tc':s.score<70?'tm':'tg'}">${s.score<40?'🔴':s.score<70?'🟡':'🟢'} ${s.etapa.nome} (${s.score})</span>`).join('')}</div></div>
+    <div class="es"><h5>Maior Gargalo</h5><p>${pior.etapa.icone} <strong>${pior.etapa.nome}</strong> (${pior.score}/100) — ${gMsg[pior.etapa.id](pior.score)}</p></div>
+    <div class="es"><h5>Impacto Financeiro</h5>
+    <p>Perda mensal estimada: <strong>${fmtR(perdM)}</strong> | Anual: <strong>${fmtR(perdA)}</strong><br>
+    Potencial com +20pp conversão: <strong>+${fmtR(g20)}/mês</strong> | Em LTV adicional/ano: <strong>${fmtR(g20*12/F.ticket*ltvVal)}</strong></p></div>
+    <div class="es"><h5>Dados Coletados do Funil</h5>
+    <p>Taxa de resposta na abordagem: <strong>${taxaRespAbord!==null?taxaRespAbord+'%':'—'}</strong> | Aceite de propostas: <strong>${taxaAceite!==null?taxaAceite+'%':'—'}</strong> | Desconto médio: <strong>${descMedio>0?descMedio+'%':'—'}</strong> | Churn: <strong>${churnPct!==null?churnPct+'%':'—'}</strong></p></div>
+    <div class="es"><h5>Próximos Passos</h5>
+    <p>1. Estruturar <strong>${pior.etapa.nome}</strong> como prioridade imediata.<br>
+    2. Implementar qualificação SPIN e follow-up com cadência definida.<br>
+    3. Treinar equipe em ancoragem de valor e fechamento sem desconto.<br>
+    4. Implantar CRM para monitorar o funil com os indicadores coletados neste diagnóstico.</p></div>`;
 
-    // Linha - distribuição de respostas por nota
-    const distrib = [0,0,0,0,0];
-    AREAS.forEach(area => {
-      const resp = estado.respostas[area.id] || {};
-      Object.values(resp).forEach(v => { if (v >= 1 && v <= 5) distrib[v-1]++; });
-    });
-    chartLinha = new Chart(document.getElementById('grafico-linha'), {
-      type: 'line',
-      data: {
-        labels: ['Nota 1 (Inexistente)', 'Nota 2', 'Nota 3', 'Nota 4', 'Nota 5 (Excelente)'],
-        datasets: [{
-          label: 'Nº de respostas',
-          data: distrib,
-          fill: true,
-          backgroundColor: 'rgba(223,95,46,0.15)',
-          borderColor: '#df5f2e',
-          tension: 0.4,
-          pointBackgroundColor: '#df5f2e',
-          pointRadius: 6,
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
-      }
-    });
-  }, 200);
-
-  // Recomendações
-  gerarRecomendacoes(scores);
+  setTimeout(()=>enviar(sc,med,niv,perdM,perdA,rAt,g20,ltvVal,taxaRespAbord,taxaAceite,descMedio,churnPct),1200);
 }
 
-function gerarRecomendacoes(scores) {
-  const REC = {
-    financeiro: [
-      { limite: 40, prio: 'alta', titulo: 'Implante controle de fluxo de caixa urgente', desc: 'A empresa não possui visibilidade financeira básica. Isso impede decisões seguras e pode levar a insolvência.' },
-      { limite: 70, prio: 'media', titulo: 'Estruture a gestão financeira com ferramentas', desc: 'Utilize planilhas ou sistemas simples para acompanhar custos, receitas e margem de contribuição.' },
-      { limite: 100, prio: 'baixa', titulo: 'Avance para indicadores financeiros estratégicos', desc: 'Com a base consolidada, trabalhe com DRE, ROI e metas de rentabilidade.' },
-    ],
-    vendas: [
-      { limite: 40, prio: 'alta', titulo: 'Defina um processo de vendas do zero', desc: 'Sem processo comercial definido, as vendas dependem de sorte. Estruture abordagem, proposta e follow-up.' },
-      { limite: 70, prio: 'media', titulo: 'Fortaleça a presença digital e estratégia de atração', desc: 'Invista em conteúdo, SEO local e gestão ativa das redes sociais para ampliar a captação de clientes.' },
-      { limite: 100, prio: 'baixa', titulo: 'Implante um CRM e métricas de conversão', desc: 'Monitore taxa de conversão, ticket médio e LTV para otimizar continuamente o funil de vendas.' },
-    ],
-    operacoes: [
-      { limite: 40, prio: 'alta', titulo: 'Documente os processos críticos imediatamente', desc: 'Processos não documentados criam dependência de pessoas e impedem o crescimento escalável.' },
-      { limite: 70, prio: 'media', titulo: 'Adote ferramentas de gestão operacional', desc: 'Um sistema simples de controle (ERP, planilha estruturada) pode reduzir erros e aumentar produtividade.' },
-      { limite: 100, prio: 'baixa', titulo: 'Implante indicadores de desempenho (KPIs) operacionais', desc: 'Meça tempo de entrega, retrabalho e satisfação do cliente para identificar gargalos.' },
-    ],
-    pessoas: [
-      { limite: 40, prio: 'alta', titulo: 'Defina funções, metas e responsabilidades claras', desc: 'Equipe sem clareza de papel gera conflitos, retrabalho e falta de comprometimento.' },
-      { limite: 70, prio: 'media', titulo: 'Crie uma rotina de reuniões e feedbacks', desc: 'Alinhamentos semanais e feedbacks estruturados aumentam engajamento e reduzem ruídos.' },
-      { limite: 100, prio: 'baixa', titulo: 'Desenvolva um plano de crescimento de carreira', desc: 'Investir no desenvolvimento da equipe retém talentos e aumenta a produtividade no longo prazo.' },
-    ]
-  };
-
-  const container = document.getElementById('lista-recomendacoes');
-  let itens = [];
-  scores.forEach(s => {
-    const lista = REC[s.area.id];
-    const rec = lista.find(r => s.score <= r.limite) || lista[lista.length - 1];
-    itens.push({ area: s.area, score: s.score, ...rec });
-  });
-  itens.sort((a,b) => {
-    const ord = { alta: 0, media: 1, baixa: 2 };
-    return ord[a.prio] - ord[b.prio];
-  });
-
-  container.innerHTML = itens.map(item => `
-    <div class="rec-item">
-      <div class="rec-prioridade">
-        <div class="prio-badge prio-${item.prio}">${item.prio.toUpperCase()}</div>
-        <div style="font-size:11px;color:var(--cinza-medio);margin-top:6px">${item.area.icone} ${item.area.nome}</div>
-      </div>
-      <div class="rec-conteudo">
-        <h5>${item.titulo}</h5>
-        <p>${item.desc}</p>
-      </div>
-    </div>
-  `).join('');
-}
-
-function novodiagnostico() {
-  document.getElementById('tela-resultado').style.display = 'none';
-  document.getElementById('tela-inicio').style.display = 'flex';
-  estado = { cliente: {}, areaAtual: 0, respostas: {}, obs: {} };
+function novoDiag(){
+  document.getElementById('t3').style.display='none';
+  document.getElementById('t0').style.display='flex';
+  document.getElementById('t0').classList.add('A');
+  E={cl:{},fu:{},nd:{},ea:0,rs:{},ob:{}};
   window.scrollTo(0,0);
 }
 
-// ===== EMAIL =====
+// EMAIL
 emailjs.init('suFHPw5vftogMizrD');
-
-function enviarEmail(scores, media, nivel) {
-  if (!scores) { scores = calcularScores(); media = Math.round(scores.reduce((a,s)=>a+s.score,0)/scores.length); nivel = getNivel(media); }
-
-  // Monta resumo das áreas
-  const resumoAreas = scores.map(s => {
-    const n = getNivel(s.score);
-    const resp = estado.respostas[s.area.id] || {};
-    const obsArea = estado.obs[s.area.id] || {};
-    const respostasTexto = s.area.perguntas.map((p, i) => {
-      const nota = resp[i] !== undefined ? resp[i] : '—';
-      const obsTexto = obsArea[i] ? ` | Obs: ${obsArea[i]}` : '';
-      return `  ${i+1}. ${p.texto}\n     Nota: ${nota}/5${obsTexto}`;
-    }).join('\n');
-    return `${s.area.icone} ${s.area.nome.toUpperCase()} — Score: ${s.score}/100 (${n.label})\n${respostasTexto}`;
+function enviar(sc,med,niv,perdM,perdA,rAt,g20,ltv,taxaResp,taxaAceite,descMedio,churnPct){
+  const F=E.fu,ND=E.nd;
+  const vAt=Math.round(F.leads*(F.conv/100));
+  const resumo=sc.map(s=>{const r=E.rs[s.etapa.id]||{},o=E.ob[s.etapa.id]||{},nd=ND[s.etapa.id]||{};
+    const nums=s.etapa.numBloco.campos.filter(c=>nd[c.id]).map(c=>`  [Dado] ${c.label}: ${nd[c.id]}`).join('\n');
+    const pergs=s.etapa.perguntas.map((p,i)=>`  ${i+1}. [${p.spin}] ${p.t}\n     Nota: ${r[i]!==undefined?r[i]:'—'}/5${o[i]?` | Obs: ${o[i]}`:''}`).join('\n');
+    return `${s.etapa.icone} ${s.etapa.nome.toUpperCase()} — ${s.score}/100 (${gN(s.score).label})\n${nums?nums+'\n':''}\n${pergs}`;
   }).join('\n\n');
 
-  // Monta recomendações
-  const REC = {
-    financeiro: [
-      { limite: 40, prio: 'ALTA', titulo: 'Implante controle de fluxo de caixa urgente' },
-      { limite: 70, prio: 'MÉDIA', titulo: 'Estruture a gestão financeira com ferramentas' },
-      { limite: 100, prio: 'BAIXA', titulo: 'Avance para indicadores financeiros estratégicos' },
-    ],
-    vendas: [
-      { limite: 40, prio: 'ALTA', titulo: 'Defina um processo de vendas do zero' },
-      { limite: 70, prio: 'MÉDIA', titulo: 'Fortaleça a presença digital e estratégia de atração' },
-      { limite: 100, prio: 'BAIXA', titulo: 'Implante um CRM e métricas de conversão' },
-    ],
-    operacoes: [
-      { limite: 40, prio: 'ALTA', titulo: 'Documente os processos críticos imediatamente' },
-      { limite: 70, prio: 'MÉDIA', titulo: 'Adote ferramentas de gestão operacional' },
-      { limite: 100, prio: 'BAIXA', titulo: 'Implante indicadores de desempenho (KPIs) operacionais' },
-    ],
-    pessoas: [
-      { limite: 40, prio: 'ALTA', titulo: 'Defina funções, metas e responsabilidades claras' },
-      { limite: 70, prio: 'MÉDIA', titulo: 'Crie uma rotina de reuniões e feedbacks' },
-      { limite: 100, prio: 'BAIXA', titulo: 'Desenvolva um plano de crescimento de carreira' },
-    ]
-  };
-  const recomendacoes = scores.map(s => {
-    const lista = REC[s.area.id];
-    const rec = lista.find(r => s.score <= r.limite) || lista[lista.length-1];
-    return `[${rec.prio}] ${s.area.nome}: ${rec.titulo}`;
-  }).join('\n');
-
-  const params = {
-    name:           estado.cliente.nome || 'Diagnóstico',
-    email:          'eron.tutoreanos@gmail.com',
-    empresa:        estado.cliente.empresa || '—',
-    responsavel:    estado.cliente.nome || '—',
-    segmento:       estado.cliente.segmento || '—',
-    funcionarios:   estado.cliente.funcionarios || '—',
-    faturamento:    estado.cliente.faturamento || '—',
-    tempo_mercado:  estado.cliente.tempoMercado || '—',
-    consultor:      estado.cliente.consultor || '—',
-    data:           estado.cliente.data || '—',
-    score_geral:    `${media}/100`,
-    nivel_geral:    nivel.label,
-    score_financeiro:  `${scores[0].score}/100 — ${getNivel(scores[0].score).label}`,
-    score_vendas:      `${scores[1].score}/100 — ${getNivel(scores[1].score).label}`,
-    score_operacoes:   `${scores[2].score}/100 — ${getNivel(scores[2].score).label}`,
-    score_pessoas:     `${scores[3].score}/100 — ${getNivel(scores[3].score).label}`,
-    resumo_areas:   resumoAreas,
-    recomendacoes:  recomendacoes,
+  const p={
+    name:E.cl.nome,email:E.cl.email,empresa:E.cl.empresa,responsavel:E.cl.nome,telefone:E.cl.tel,
+    segmento:E.cl.seg||'—',vendedores:E.cl.vend||'—',consultor:E.cl.consultor||'—',data:E.cl.data,
+    ticket_medio:fmtR(F.ticket),taxa_conversao:`${F.conv}%`,leads_mes:`${F.leads}`,vendas_mes:`${vAt}`,
+    receita_atual:fmtR(rAt),ltv_cliente:fmtR(ltv),base_clientes:`${F.base||'—'}`,ciclo_vendas:F.ciclo?`${F.ciclo}d`:'—',
+    perda_mensal:fmtR(perdM),perda_anual:fmtR(perdA),ganho_potencial:`+${fmtR(g20)}/mês com +20pp conversão`,
+    taxa_resposta_abordagem:taxaResp!==null?`${taxaResp}%`:'—',taxa_aceite_proposta:taxaAceite!==null?`${taxaAceite}%`:'—',
+    desconto_medio:descMedio>0?`${descMedio}%`:'—',churn_mensal:churnPct!==null?`${churnPct}%`:'—',
+    score_geral:`${med}/100`,nivel_geral:niv.label,
+    score_prospeccao:`${sc[0].score}/100 — ${gN(sc[0].score).label}`,score_abordagem:`${sc[1].score}/100 — ${gN(sc[1].score).label}`,
+    score_qualificacao:`${sc[2].score}/100 — ${gN(sc[2].score).label}`,score_proposta:`${sc[3].score}/100 — ${gN(sc[3].score).label}`,
+    score_fechamento:`${sc[4].score}/100 — ${gN(sc[4].score).label}`,
+    resumo_areas:resumo,
   };
 
-  emailjs.send('service_nls9ble', 'template_w03s7kb', params)
-    .then(() => {
-      console.log('✅ Diagnóstico enviado para eron.tutoreanos@gmail.com');
-    })
-    .catch((err) => {
-      console.error('EmailJS erro:', err);
-    });
+  emailjs.send('service_nls9ble','template_w03s7kb',p)
+    .then(()=>{document.getElementById('est').style.display='block';console.log('✅ Enviado');})
+    .catch(err=>console.error('EmailJS erro:',err));
 }
 </script>
 </body>
